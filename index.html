@@ -64,6 +64,57 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-ctfweb" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/11/25/ctfweb/" class="article-date">
+  <time datetime="2020-11-25T14:13:48.000Z" itemprop="datePublished">2020-11-25</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/11/25/ctfweb/">ctf-web</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="CTF-WEB"><a href="#CTF-WEB" class="headerlink" title="CTF-WEB"></a>CTF-WEB</h1><h1 id="第一题"><a href="#第一题" class="headerlink" title="第一题"></a>第一题</h1><p>打开题目所给网页如图<br><img src="https://note.youdao.com/yws/api/personal/file/WEBe333e3bb898cdc1e18865bbc78a64f88?method=download&shareKey=cc1458c17c1fe1f54b35889e6d1c42e3"><br>查看源代码可使用view-source：<a target="_blank" rel="noopener" href="http://220.249.52.133:32303/">http://220.249.52.133:32303/</a><br>即可得到<br><img src="https://note.youdao.com/yws/api/personal/file/WEB6de6171b851db01fd9eb9c468b523396?method=download&shareKey=941f6adc958bc010a42bbf8b3d583f5a"><br>第十七行中蓝色部分即为所需flag</p>
+<h1 id="第二题"><a href="#第二题" class="headerlink" title="第二题"></a>第二题</h1><p>打开题目所给网页如图<br><img src="https://note.youdao.com/yws/api/personal/file/WEB5f020626ef2cde26c3e832184653acb4?method=download&shareKey=6b4becaef2f5bbfda5f0bfe33c2cd38f"><br>对网页使用robots协议输入<a target="_blank" rel="noopener" href="http://220.249.52.133:31344/robots.txt">http://220.249.52.133:31344/robots.txt</a></p>
+<p>得到文本内容<br><img src="https://note.youdao.com/yws/api/personal/file/WEB500d33567f4d1153bef816f473e0574b?method=download&shareKey=9e8cbd7d8efd2b64ae375bebbd7c568d"><br>第三行的f1ag_1s_h3re.php为打开该目录下PHP格式文件<br><img src="https://note.youdao.com/yws/api/personal/file/WEB3d5aaed235a6f834a2a4c2f522058e92?method=download&shareKey=c499f49f2efd1ca6cc3d15f714c29467"><br>得到的内容极为flag</p>
+<h1 id="第三题"><a href="#第三题" class="headerlink" title="第三题"></a>第三题</h1><p>打开题目所给网页如图<br><img src="https://note.youdao.com/yws/api/personal/file/WEBf25bdad3f93c3b2134497ca2dc2088ee?method=download&shareKey=5c815eb90b47ecbd32cbd6716045803b"><br>查询得知index.php的备份文件名为index.php.bak</p>
+<p>输入220.249.52.133:49804/index.php.bak会弹出如下界面<br><img src="https://note.youdao.com/yws/api/personal/file/WEB013115cc9ea0f369780d40f4f55d148d?method=download&shareKey=f7d3624510c1c01379da7081d54f6aa9"><br>选择以记事本打开后会得到答案所在，如图<br><img src="https://note.youdao.com/yws/api/personal/file/WEB76ed2c24a84245ab889edcff5904ea45?method=download&shareKey=a512c6cf24f1fb023ceb23e317f9e1b1"><br>输入flag即为答案</p>
+<h1 id="第四题"><a href="#第四题" class="headerlink" title="第四题"></a>第四题</h1><p>打开题目所给网页如图<br><img src="https://note.youdao.com/yws/api/personal/file/WEB9d697598decf6b5d46cc647c2c93b4d3?method=download&shareKey=475ed4b19dc25c87d408fb26fb9ab783"><br>使用火狐cookie查询所存放的地址<br><img src="https://note.youdao.com/yws/api/personal/file/WEB893690cb8bf23bec48e3667a8e50c4e2?method=download&shareKey=ceb9af2cbcfbe7a90a5bd7d0c23113f0"><br>得到在cookie.php目录下</p>
+<p>输入<a target="_blank" rel="noopener" href="http://220.249.52.133:56288/cookie.php%E5%BE%97%E5%88%B0">http://220.249.52.133:56288/cookie.php得到</a><br><img src="https://note.youdao.com/yws/api/personal/file/WEBecaec77db6e6b786579080390cd7cba2?method=download&shareKey=7da176a1cefc0999b0c0931d07674ecd"><br>使用hackbar查询回复<br><img src="https://note.youdao.com/yws/api/personal/file/WEB1524d88bbbb8224f0344da34cc2d9c78?method=download&shareKey=2a7e9af67793477169b5c6d573ad66c2"><br>在右边的响应里即可得到flag</p>
+<h1 id="第五题"><a href="#第五题" class="headerlink" title="第五题"></a>第五题</h1><p>打开题目所给网页如图<br><img src="https://note.youdao.com/yws/api/personal/file/WEBf0f3698668fe4cddb021ca4b2a12144f?method=download&shareKey=92b77306e73b50968ebd620c40e25abc"><br>打开后发现flag按钮无法按下</p>
+<p>使用hackbar对页面查看发现按钮为disabled<br><img src="https://note.youdao.com/yws/api/personal/file/WEB473f834d3cefb71a8b0ab5471b54480d?method=download&shareKey=a2973250f438b5ace5a243d0b587300b"><br>将disabled改为abled后发现按钮可以按了<br><img src="https://note.youdao.com/yws/api/personal/file/WEB46613771bbd9fd701a2106e22a23b12e?method=download&shareKey=4fec3645e5c2724869affce2aa2f6e8a"><br>显示即为所求flag</p>
+<h1 id="第六题"><a href="#第六题" class="headerlink" title="第六题"></a>第六题</h1><p>打开题目所给网页如图<br><img src="https://note.youdao.com/yws/api/personal/file/WEB9bfcfa7f93c15e689e11611b33d5d2e3?method=download&shareKey=80b49721820217e2cb536ff54f70917a"><br>经过试验发现login为admin<br><img src="https://note.youdao.com/yws/api/personal/file/WEB643cabf4bd0009a0fb4766ef55ff1664?method=download&shareKey=e86327a8deba2244e5dc76afaa3c091f"><br>使用login为admin，password为123试验，发现登陆错误</p>
+<p>使用burpsuit抓包<br><img src="https://note.youdao.com/yws/api/personal/file/WEB321651a9753d3c3243a68ef08b71a5b0?method=download&shareKey=eb10808274184a594a9103750590987d"><br>之后发送到intruder模块进行爆破对123添加变量，加载字典，进行爆破<br><img src="https://note.youdao.com/yws/api/personal/file/WEBb3e9b51e44f0cffd16d59c9b559319f3?method=download&shareKey=e6da53290b68c5b7ff6d3d92b2fa50ed"><br><img src="https://note.youdao.com/yws/api/personal/file/WEB727bea2df54fb3c6d4cf411ef9905fa3?method=download&shareKey=1be8663d250fc82b989d785122cb6a3b"><br>发现密码为123456时长度不同，所以密码为123456，<br>输入密码得到flag<br><img src="https://note.youdao.com/yws/api/personal/file/WEB7068ac84b584ce5e3147e90dd1c40a46?method=download&shareKey=83dcef8a5152e8a0aa41953839ed4d13"></p>
+<h1 id="第七题"><a href="#第七题" class="headerlink" title="第七题"></a>第七题</h1><p>打开题目所给网页如图<br><img src="https://note.youdao.com/yws/api/personal/file/WEB416c10902f35d1db27679f6967c36c37?method=download&shareKey=2d4408b5dd967e5c7a139cb883c1943a"><br>经过分析要求一$a==0 and $a意思为a=0且a为真<br>因为PHP是弱语言a为字符型转为数字型a值为0为真<br>即a==0为真。要求二为b为字符型且要大于1234.</p>
+<p>所以输入?a=a&amp;b=2345a,即得到输出的flag<br><img src="https://note.youdao.com/yws/api/personal/file/WEB6cfa2ada84eb7688a1056f55edc6fd50?method=download&shareKey=308f34c6114a17b4cce7b67b02a60a38"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/11/25/ctfweb/" data-id="ckhyz2drj0000lcutft80f5hn" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ctf-web/" rel="tag">ctf-web</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-sql" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/11/24/sql/" class="article-date">
@@ -86,7 +137,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="第一题"><a href="#第一题" class="headerlink" title="第一题"></a>第一题</h1><h3 id="第一步"><a href="#第一步" class="headerlink" title="第一步"></a>第一步</h3><p>打开第一题页面输入<a target="_blank" rel="noopener" href="http://127.0.0.1/Sqli_Edited_Version-master/sqlilabs/Less-1/?id=1&#39;%E5%90%8E%E6%98%BE%E7%A4%BA%E5%A6%82%E5%9B%BE">http://127.0.0.1/Sqli_Edited_Version-master/sqlilabs/Less-1/?id=1&#39;后显示如图</a><br><img src="https://note.youdao.com/yws/api/personal/file/WEB779244d855917876d81354a359740b22?method=download&shareKey=79866038ad08f6955326b1c36a80daac" alt="image"><br>可知输入样式为’’ LIMIT 0,1为数字型</p>
+        <h1 id="第一题"><a href="#第一题" class="headerlink" title="第一题"></a>第一题</h1><h3 id="第一步"><a href="#第一步" class="headerlink" title="第一步"></a>第一步</h3><p>打开第一题页面输入<a target="_blank" rel="noopener" href="http://127.0.0.1/Sqli_Edited_Version-master/sqlilabs/Less-1/?id=1&#39;">http://127.0.0.1/Sqli_Edited_Version-master/sqlilabs/Less-1/?id=1&#39;</a><br>后显示如图<br><img src="https://note.youdao.com/yws/api/personal/file/WEB779244d855917876d81354a359740b22?method=download&shareKey=79866038ad08f6955326b1c36a80daac" alt="image"><br>可知输入样式为’’ LIMIT 0,1为数字型</p>
 <h3 id="第二步"><a href="#第二步" class="headerlink" title="第二步"></a>第二步</h3><p>经过实验<br>输入<a target="_blank" rel="noopener" href="http://127.0.0.1/Sqli_Edited_Version-master/sqlilabs/Less-1/?id=1&#39;">http://127.0.0.1/Sqli_Edited_Version-master/sqlilabs/Less-1/?id=1&#39;</a> order by 3–+显示<br><img src="https://note.youdao.com/yws/api/personal/file/WEB6e42ff49caff5267a0e2dd34577add3e?method=download&shareKey=24fe73ae33f80bf253556c45bba1fcbc" alt="image"><br>该数据库只有三列</p>
 <h3 id="第三步"><a href="#第三步" class="headerlink" title="第三步"></a>第三步</h3><p>输入<a target="_blank" rel="noopener" href="http://127.0.0.1/Sqli_Edited_Version-master/sqlilabs/Less-1/?id=0&#39;">http://127.0.0.1/Sqli_Edited_Version-master/sqlilabs/Less-1/?id=0&#39;</a> union select 1,2,3–+显示<br><img src="https://note.youdao.com/yws/api/personal/file/WEB149f5068d8b60379d8b379778e5a5db1?method=download&shareKey=c75e7ce0062e6017aaca203349649080" alt="image">可知2，3列之间存在漏洞，在2，3之间实施SQL语句</p>
 <p>select group_concat(schema_name) from information_schema.schemata<br><img src="https://note.youdao.com/yws/api/personal/file/WEB683864f782b0e4d2bf30cb7de72edd68?method=download&shareKey=0cc37896165acff2002b386496755287"><br>得到数据库名有information_schema,challenges,mysql,performance_schema,security,sys,xxx</p>
@@ -129,6 +180,8 @@
       <a data-url="http://example.com/2020/11/24/sql/" data-id="ckhw4bgvq0000u0utbv1p5wly" class="article-share-link">Share</a>
       
       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sqli-lab/" rel="tag">sqli-lab</a></li></ul>
+
     </footer>
   </div>
   
@@ -237,7 +290,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B9%9D%E4%B9%9D%E4%B9%98%E6%B3%95%E8%A1%A8/" rel="tag">九九乘法表</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ctf-web/" rel="tag">ctf-web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqli-lab/" rel="tag">sqli-lab</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B9%9D%E4%B9%9D%E4%B9%98%E6%B3%95%E8%A1%A8/" rel="tag">九九乘法表</a></li></ul>
     </div>
   </div>
 
@@ -247,7 +300,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/%E4%B9%9D%E4%B9%9D%E4%B9%98%E6%B3%95%E8%A1%A8/" style="font-size: 10px;">九九乘法表</a>
+      <a href="/tags/ctf-web/" style="font-size: 10px;">ctf-web</a> <a href="/tags/sqli-lab/" style="font-size: 10px;">sqli-lab</a> <a href="/tags/%E4%B9%9D%E4%B9%9D%E4%B9%98%E6%B3%95%E8%A1%A8/" style="font-size: 10px;">九九乘法表</a>
     </div>
   </div>
 
@@ -267,6 +320,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2020/11/25/ctfweb/">ctf-web</a>
+          </li>
         
           <li>
             <a href="/2020/11/24/sql/">sql</a>
