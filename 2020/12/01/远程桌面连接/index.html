@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>远程桌面连接 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Windows远程桌面连接 kali远程桌面连接 更改虚拟机IP地址1.打开VMware，点击编辑,点击虚拟网络编辑器。2.点击虚拟网络编辑器中的更改设置。3.修改子网IP为10.1.1.0。4.修改nat设置中网关IP为10.1.1.15.修改DHCP设置中起始IP地址为10.1.1.1，结束IP地址为10.1.1.254。6.更改完成后点击确定，在Windows中使用ipconfig,Kali">
+<meta property="og:type" content="article">
+<meta property="og:title" content="远程桌面连接">
+<meta property="og:url" content="http://example.com/2020/12/01/%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Windows远程桌面连接 kali远程桌面连接 更改虚拟机IP地址1.打开VMware，点击编辑,点击虚拟网络编辑器。2.点击虚拟网络编辑器中的更改设置。3.修改子网IP为10.1.1.0。4.修改nat设置中网关IP为10.1.1.15.修改DHCP设置中起始IP地址为10.1.1.1，结束IP地址为10.1.1.254。6.更改完成后点击确定，在Windows中使用ipconfig,Kali">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://note.youdao.com/yws/api/personal/file/WEB6e6ce9fa3dbba2289218aedcd47363a5?method=download&shareKey=c05dbcbe0a41154bb86d33dd550115d1">
+<meta property="og:image" content="https://note.youdao.com/yws/api/personal/file/WEB5af1c5a82211a3f643166ee26fdd894f?method=download&shareKey=cf048507567b71e3ec3a9c45f13bca76">
+<meta property="og:image" content="https://note.youdao.com/yws/api/personal/file/WEB77972a553405c699ac59fb597fc00588?method=download&shareKey=5a7aafe60d132db40ba1ce9ae81b80f4">
+<meta property="og:image" content="https://note.youdao.com/yws/api/personal/file/WEBe581ddfed84afc1dac26d44bcb9c24d0?method=download&shareKey=8474ab20c3b54f3fcf62384419d205af">
+<meta property="og:image" content="https://note.youdao.com/yws/api/personal/file/WEBa53df8acab35bd8c4fa32e855ae2e7fd?method=download&shareKey=a73785249970d394506cb11ee6ac28e9">
+<meta property="og:image" content="https://note.youdao.com/yws/api/personal/file/WEB788dc068980522531431ac620d351ffb?method=download&shareKey=0044a78e504d9f6e9a71142fd435ec50">
+<meta property="og:image" content="https://note.youdao.com/yws/api/personal/file/WEB3b3307b63bd167a12d7067da025c6621?method=download&shareKey=c9f2f3440158fcd9e818f3ab430f61a8">
+<meta property="og:image" content="https://note.youdao.com/yws/api/personal/file/WEB267fdf3118092e9be7abbafe8c2f16c4?method=download&shareKey=d50f53a29347e9d0b0de0614988d10d8">
+<meta property="og:image" content="https://note.youdao.com/yws/api/personal/file/WEB836e0c951722ec10d1c8b00ebd64da3f?method=download&shareKey=a080f41ba09a7e53523031adfaeab143">
+<meta property="og:image" content="https://note.youdao.com/yws/api/personal/file/WEB66ca390e7ae4c4b4600e77043a0d751b?method=download&shareKey=d92e4a8e1e37c7e7a6d1835d57684cd4">
+<meta property="og:image" content="https://note.youdao.com/yws/api/personal/file/WEB7baf43892511b2aa0a83eb9bf7a3c168?method=download&shareKey=43103e3e2937ae072686263bfd51ebeb">
+<meta property="og:image" content="https://note.youdao.com/yws/api/personal/file/WEBa849367a428afc6f5fd82a623125ea64?method=download&shareKey=30053c30ef54cd22002a3d9cac2c3d36">
+<meta property="og:image" content="https://note.youdao.com/yws/api/personal/file/WEBd8b210934894999823a0586715b36eba?method=download&shareKey=118cc0756aef29e204e515863c83ea08">
+<meta property="og:image" content="https://note.youdao.com/yws/api/personal/file/WEB5936d0bd56dc635770bddcedb95c933a?method=download&shareKey=da0a69e20546ef65d36405f334a46961">
+<meta property="og:image" content="https://note.youdao.com/yws/api/personal/file/WEBec926b52994f34a79616f9ef93ea367b?method=download&shareKey=76e178c39462007465ee99d3786cbd9f">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200306110205883.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2pha2Vsb3ZlXw==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200306110321870.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2pha2Vsb3ZlXw==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200306110605818.PNG">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200306110656717.PNG">
+<meta property="og:image" content="https://note.youdao.com/yws/api/personal/file/WEB4119d617840b2a8e6d9aa89bd1cb75d7?method=download&shareKey=04dadca4f078c0df6d07a43210368b84">
+<meta property="og:image" content="https://note.youdao.com/yws/api/personal/file/WEBca6850fcd2d6e23bdec18a5b848fd485?method=download&shareKey=7cc394d312f93fa5defa14ac4d791815">
+<meta property="og:image" content="https://note.youdao.com/yws/api/personal/file/WEB2a9a3d51cc11fbdb2070e3885a9c1842?method=download&shareKey=7fb2f5c3387beae9e4894426aecfe802">
+<meta property="article:published_time" content="2020-12-01T13:24:01.000Z">
+<meta property="article:modified_time" content="2020-12-04T11:27:41.945Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="Windows与Kali远程桌面连接">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://note.youdao.com/yws/api/personal/file/WEB6e6ce9fa3dbba2289218aedcd47363a5?method=download&shareKey=c05dbcbe0a41154bb86d33dd550115d1">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-远程桌面连接" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/12/01/%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5/" class="article-date">
+  <time datetime="2020-12-01T13:24:01.000Z" itemprop="datePublished">2020-12-01</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      远程桌面连接
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a href="#Windows%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5">Windows远程桌面连接</a></p>
+<p><a href="#kali%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5">kali远程桌面连接</a></p>
+<h1 id="更改虚拟机IP地址"><a href="#更改虚拟机IP地址" class="headerlink" title="更改虚拟机IP地址"></a>更改虚拟机IP地址</h1><p><font size=4>1.打开VMware，点击编辑,点击虚拟网络编辑器。<br><img src="https://note.youdao.com/yws/api/personal/file/WEB6e6ce9fa3dbba2289218aedcd47363a5?method=download&shareKey=c05dbcbe0a41154bb86d33dd550115d1"><br>2.点击虚拟网络编辑器中的更改设置。<br><img src="https://note.youdao.com/yws/api/personal/file/WEB5af1c5a82211a3f643166ee26fdd894f?method=download&shareKey=cf048507567b71e3ec3a9c45f13bca76"><br>3.修改子网IP为10.1.1.0。<br><img src="https://note.youdao.com/yws/api/personal/file/WEB77972a553405c699ac59fb597fc00588?method=download&shareKey=5a7aafe60d132db40ba1ce9ae81b80f4"><br>4.修改nat设置中网关IP为10.1.1.1<br><img src="https://note.youdao.com/yws/api/personal/file/WEBe581ddfed84afc1dac26d44bcb9c24d0?method=download&shareKey=8474ab20c3b54f3fcf62384419d205af"><br>5.修改DHCP设置中起始IP地址为10.1.1.1，结束IP地址为10.1.1.254。<br><img src="https://note.youdao.com/yws/api/personal/file/WEBa53df8acab35bd8c4fa32e855ae2e7fd?method=download&shareKey=a73785249970d394506cb11ee6ac28e9"><br>6.更改完成后点击确定，在Windows中使用ipconfig,Kali中使用ifconfig即可发现IP地址处于10.1.1.1的网段内。<br><img src="https://note.youdao.com/yws/api/personal/file/WEB788dc068980522531431ac620d351ffb?method=download&shareKey=0044a78e504d9f6e9a71142fd435ec50"></font></p>
+<h1 id="Windows远程桌面连接"><a href="#Windows远程桌面连接" class="headerlink" title="Windows远程桌面连接"></a>Windows远程桌面连接</h1><h2 id="一、虚拟机设置"><a href="#一、虚拟机设置" class="headerlink" title="一、虚拟机设置"></a>一、虚拟机设置</h2><p><font size=4>1.在虚拟机中右击计算机，点击属性，打开系统<br><img src="https://note.youdao.com/yws/api/personal/file/WEB3b3307b63bd167a12d7067da025c6621?method=download&shareKey=c9f2f3440158fcd9e818f3ab430f61a8"><br>2.点击左侧远程设置，进行如图设置<br><img src="https://note.youdao.com/yws/api/personal/file/WEB267fdf3118092e9be7abbafe8c2f16c4?method=download&shareKey=d50f53a29347e9d0b0de0614988d10d8"><br>3.点击选择用户，点击添加，点击高级<br><img src="https://note.youdao.com/yws/api/personal/file/WEB836e0c951722ec10d1c8b00ebd64da3f?method=download&shareKey=a080f41ba09a7e53523031adfaeab143"><br>4.选择1用户为everyone<br><img src="https://note.youdao.com/yws/api/personal/file/WEB66ca390e7ae4c4b4600e77043a0d751b?method=download&shareKey=d92e4a8e1e37c7e7a6d1835d57684cd4"><br>5.按windows+r输入cmd点击确定，输入ipconfig<br><img src="https://note.youdao.com/yws/api/personal/file/WEB7baf43892511b2aa0a83eb9bf7a3c168?method=download&shareKey=43103e3e2937ae072686263bfd51ebeb"><br>二、物理机连接</p>
+<p>1.按windows+r输入mstsc点击确定，输入计算机名和用户名,点击链接。<br><img src="https://note.youdao.com/yws/api/personal/file/WEBa849367a428afc6f5fd82a623125ea64?method=download&shareKey=30053c30ef54cd22002a3d9cac2c3d36"><br>2.输入密码<br><img src="https://note.youdao.com/yws/api/personal/file/WEBd8b210934894999823a0586715b36eba?method=download&shareKey=118cc0756aef29e204e515863c83ea08"><br>3.连接成功<br><img src="https://note.youdao.com/yws/api/personal/file/WEB5936d0bd56dc635770bddcedb95c933a?method=download&shareKey=da0a69e20546ef65d36405f334a46961"></p>
+<h1 id="kali远程桌面连接"><a href="#kali远程桌面连接" class="headerlink" title="kali远程桌面连接"></a>kali远程桌面连接</h1><h2 id="一、连接前配置内容"><a href="#一、连接前配置内容" class="headerlink" title="一、连接前配置内容"></a>一、连接前配置内容</h2><p><font color=#ff0000 size=4><strong>1.修改ssh配置文件</strong></font></p>
+<p><font size=4>在终端输入命令vi /etc/ssh/sshd_config<br><img src="https://note.youdao.com/yws/api/personal/file/WEBec926b52994f34a79616f9ef93ea367b?method=download&shareKey=76e178c39462007465ee99d3786cbd9f"><br>将PermitRootLogin without-password修改为：PermitRootLogin yes<br><img src="https://img-blog.csdnimg.cn/20200306110205883.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2pha2Vsb3ZlXw==,size_16,color_FFFFFF,t_70"><br>找到#PasswordAuthentication yes 把#的注释去掉<br><img src="https://img-blog.csdnimg.cn/20200306110321870.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2pha2Vsb3ZlXw==,size_16,color_FFFFFF,t_70"><br>修改完后，按ESC键,再按shift和：输入wq。保存退出。<br><font color=#ff0000 size=4><strong>2.启动ssh服务</strong></font></p>
+<p>输入命令：/etc/init.d/ssh start<br><img src="https://img-blog.csdnimg.cn/20200306110605818.PNG"><br><font color=#ff0000 size=4><strong>3.设置开机启动</strong></font></p>
+<p>输入命令：update-rc.d ssh enable<br><img src="https://img-blog.csdnimg.cn/20200306110656717.PNG"><br><font color=#ff0000 size=4><strong>4.重启Kali</strong></font></p>
+<h2 id="二、使用xshell连接Kali"><a href="#二、使用xshell连接Kali" class="headerlink" title="二、使用xshell连接Kali"></a>二、使用xshell连接Kali</h2><p>在左边工作区中新建会话，名称为IP地址。<br><img src="https://note.youdao.com/yws/api/personal/file/WEB4119d617840b2a8e6d9aa89bd1cb75d7?method=download&shareKey=04dadca4f078c0df6d07a43210368b84"><br>点击确定后，在工作区内点击该名称即可开始连接,输入用户名，输入密码。<br><img src="https://note.youdao.com/yws/api/personal/file/WEBca6850fcd2d6e23bdec18a5b848fd485?method=download&shareKey=7cc394d312f93fa5defa14ac4d791815"><br>连接成功后如图<br><img src="https://note.youdao.com/yws/api/personal/file/WEB2a9a3d51cc11fbdb2070e3885a9c1842?method=download&shareKey=7fb2f5c3387beae9e4894426aecfe802"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/12/01/%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5/" data-id="ckia6qyyz00011sutbgx2eu9a" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Windows%E4%B8%8EKali%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5/" rel="tag">Windows与Kali远程桌面连接</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2020/11/30/dingyi/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">dingyi</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Windows%E4%B8%8EKali%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5/" rel="tag">Windows与Kali远程桌面连接</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ctf-web/" rel="tag">ctf-web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqli-lab/" rel="tag">sqli-lab</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B9%9D%E4%B9%9D%E4%B9%98%E6%B3%95%E8%A1%A8/" rel="tag">九九乘法表</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BD%91%E5%AE%89%E6%96%B9%E5%90%91%E9%83%A8%E5%88%86%E6%A6%82%E5%BF%B5/" rel="tag">网安方向部分概念</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Windows%E4%B8%8EKali%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5/" style="font-size: 10px;">Windows与Kali远程桌面连接</a> <a href="/tags/ctf-web/" style="font-size: 10px;">ctf-web</a> <a href="/tags/sqli-lab/" style="font-size: 10px;">sqli-lab</a> <a href="/tags/%E4%B9%9D%E4%B9%9D%E4%B9%98%E6%B3%95%E8%A1%A8/" style="font-size: 10px;">九九乘法表</a> <a href="/tags/%E7%BD%91%E5%AE%89%E6%96%B9%E5%90%91%E9%83%A8%E5%88%86%E6%A6%82%E5%BF%B5/" style="font-size: 10px;">网安方向部分概念</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/12/01/%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5/">远程桌面连接</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/30/dingyi/">dingyi</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/25/ctfweb/">ctf-web</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/24/sql/">sql</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/17/post99cfb/">post99cfb</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
