@@ -94,7 +94,7 @@
 <meta property="og:image" content="https://image.3001.net/images/20161223/14824830099169.png!small">
 <meta property="og:image" content="https://image.3001.net/images/20161223/1482483036879.png!small">
 <meta property="article:published_time" content="2021-02-26T15:14:04.000Z">
-<meta property="article:modified_time" content="2021-02-28T13:13:04.968Z">
+<meta property="article:modified_time" content="2021-02-28T13:17:25.406Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://image.3001.net/images/20161009/14760002264830.jpg!small">
@@ -180,39 +180,14 @@
 <p><a href="#%E7%AC%AC%E5%8D%81%E9%A2%98-XSS-(Stored)">第十题-XSS (Stored)</a></p>
 <h1 id="第一题-Brute-Force"><a href="#第一题-Brute-Force" class="headerlink" title="第一题-Brute-Force"></a>第一题-Brute-Force</h1><p><img src="https://image.3001.net/images/20161009/14760002264830.jpg!small"></p>
 <h2 id="low"><a href="#low" class="headerlink" title="low"></a>low</h2><p>查看源代码</p>
-<hr>
-<?php
-
-if(isset($_GET['Login'])){
-//Getusername
-$user=$_GET['username'];
-
-//Getpassword
-$pass=$_GET['password'];
-$pass=md5($pass);
-
-//Checkthedatabase
-$query="SELECT*FROM`users`WHEREuser='$user'ANDpassword='$pass';";
-$result=mysql_query($query)ordie('<pre>'.mysql_error().'</pre>');
-
-if($result&&mysql_num_rows($result)==1){
-//Getusersdetails
-$avatar=mysql_result($result,0,"avatar");
-
-//Loginsuccessful
-echo"<p>Welcometothepasswordprotectedarea{$user}</p>";
-echo"<imgsrc="{$avatar}"/>";
-}
-else{
-//Loginfailed
-echo"<pre><br/>Usernameand/orpasswordincorrect.</pre>";
-}
-
-mysql_close();
-}
-
-?>
-<hr>
+<p>、<br>&lt;?php</p>
+<p>if(isset($_GET[‘Login’])){<br>//Getusername<br>$user=$_GET[‘username’];</p>
+<p>//Getpassword<br>$pass=$_GET[‘password’];<br>$pass=md5($pass);</p>
+<p>//Checkthedatabase<br>$query=”SELECT*FROM<code>users</code>WHEREuser=’$user’ANDpassword=’$pass’;”;<br>$result=mysql_query($query)ordie(‘<pre>'.mysql_error().'</pre>‘);</p>
+<p>if($result&amp;&amp;mysql_num_rows($result)==1){<br>//Getusersdetails<br>$avatar=mysql_result($result,0,”avatar”);</p>
+<p>//Loginsuccessful<br>echo”<p>Welcometothepasswordprotectedarea{$user}</p>“;<br>echo”&lt;imgsrc=”{$avatar}”/&gt;”;<br>}<br>else{<br>//Loginfailed<br>echo”<pre><br/>Usernameand/orpasswordincorrect.</pre>“;<br>}</p>
+<p>mysql_close();<br>}</p>
+<p>?&gt;、</p>
 <p>可以看到，服务器只是验证了参数Login是否被设置（isset函数在php中用来检测变量是否设置，该函数返回的是布尔类型的值，即true/false），没有任何的防爆破机制，且对参数username、password没有做任何过滤，存在明显的sql注入漏洞。<br>（1）burpsuit<br>    第一步抓包<br><img src="https://image.3001.net/images/20161009/14760003309956.png!small"><br>    第二步，ctrl+I将包复制到intruder模块，因为要对password参数进行爆破，所以在password参数的内容两边加$<br><img src="https://image.3001.net/images/20161009/147600029633.png!small"><br>    第三步选中Payloads，载入字典，点击Start attack进行爆破<br><img src="https://image.3001.net/images/20161009/14760003769188.png!small"><br>最后，尝试在爆破结果中找到正确的密码，可以看到password的响应包长度（length）“与众不同”，可推测password为正确密码，手工验证登陆成功。<br><img src="https://image.3001.net/images/20161009/14760004176934.png!small"><br>(2)sql注入<br>万能密钥<br>admin’or ‘1’=’1<br>admin’ – -<br>admin’ # </p>
 <p>注入成功<br><img src="https://image.3001.net/images/20161009/14760004593118.png!small"></p>
 <h2 id="Medium"><a href="#Medium" class="headerlink" title="Medium"></a>Medium</h2><p>源代码</p>
