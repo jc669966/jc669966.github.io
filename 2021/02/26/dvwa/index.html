@@ -16,7 +16,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://image.3001.net/images/20161009/14760002264830.jpg!small">
 <meta property="og:image" content="https://image.3001.net/images/20161009/14760003309956.png!small">
-<meta property="og:image" content="https://image.3001.net/images/20161009/147600029633![]()!small">
+<meta property="og:image" content="https://image.3001.net/images/20161009/147600029633.png!small">
 <meta property="og:image" content="https://image.3001.net/images/20161009/14760003769188.png!small">
 <meta property="og:image" content="https://image.3001.net/images/20161009/14760004176934.png!small">
 <meta property="og:image" content="https://image.3001.net/images/20161009/14760004593118.png!small">
@@ -94,7 +94,7 @@
 <meta property="og:image" content="https://image.3001.net/images/20161223/14824830099169.png!small">
 <meta property="og:image" content="https://image.3001.net/images/20161223/1482483036879.png!small">
 <meta property="article:published_time" content="2021-02-26T15:14:04.000Z">
-<meta property="article:modified_time" content="2021-02-28T05:56:51.901Z">
+<meta property="article:modified_time" content="2021-02-28T13:13:04.968Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://image.3001.net/images/20161009/14760002264830.jpg!small">
@@ -179,7 +179,9 @@
 <p><a href="#%E7%AC%AC%E4%B9%9D%E9%A2%98-XSS-(Reflected)">第九题-XSS (Reflected)</a></p>
 <p><a href="#%E7%AC%AC%E5%8D%81%E9%A2%98-XSS-(Stored)">第十题-XSS (Stored)</a></p>
 <h1 id="第一题-Brute-Force"><a href="#第一题-Brute-Force" class="headerlink" title="第一题-Brute-Force"></a>第一题-Brute-Force</h1><p><img src="https://image.3001.net/images/20161009/14760002264830.jpg!small"></p>
-<h2 id="low"><a href="#low" class="headerlink" title="low"></a>low</h2><h2 id="查看源代码"><a href="#查看源代码" class="headerlink" title="查看源代码"></a>查看源代码</h2><?php
+<h2 id="low"><a href="#low" class="headerlink" title="low"></a>low</h2><p>查看源代码</p>
+<hr>
+<?php
 
 if(isset($_GET['Login'])){
 //Getusername
@@ -211,9 +213,11 @@ mysql_close();
 
 ?>
 <hr>
-<p>可以看到，服务器只是验证了参数Login是否被设置（isset函数在php中用来检测变量是否设置，该函数返回的是布尔类型的值，即true/false），没有任何的防爆破机制，且对参数username、password没有做任何过滤，存在明显的sql注入漏洞。<br>（1）burpsuit<br>    第一步抓包<br><img src="https://image.3001.net/images/20161009/14760003309956.png!small"><br>    第二步，ctrl+I将包复制到intruder模块，因为要对password参数进行爆破，所以在password参数的内容两边加$<br><img src="https://image.3001.net/images/20161009/147600029633![]()!small"><br>    第三步选中Payloads，载入字典，点击Start attack进行爆破<br><img src="https://image.3001.net/images/20161009/14760003769188.png!small"><br>最后，尝试在爆破结果中找到正确的密码，可以看到password的响应包长度（length）“与众不同”，可推测password为正确密码，手工验证登陆成功。<br><img src="https://image.3001.net/images/20161009/14760004176934.png!small"><br>(2)sql注入<br>万能密钥<br>admin’or ‘1’=’1<br>admin’ – -<br>admin’ # </p>
+<p>可以看到，服务器只是验证了参数Login是否被设置（isset函数在php中用来检测变量是否设置，该函数返回的是布尔类型的值，即true/false），没有任何的防爆破机制，且对参数username、password没有做任何过滤，存在明显的sql注入漏洞。<br>（1）burpsuit<br>    第一步抓包<br><img src="https://image.3001.net/images/20161009/14760003309956.png!small"><br>    第二步，ctrl+I将包复制到intruder模块，因为要对password参数进行爆破，所以在password参数的内容两边加$<br><img src="https://image.3001.net/images/20161009/147600029633.png!small"><br>    第三步选中Payloads，载入字典，点击Start attack进行爆破<br><img src="https://image.3001.net/images/20161009/14760003769188.png!small"><br>最后，尝试在爆破结果中找到正确的密码，可以看到password的响应包长度（length）“与众不同”，可推测password为正确密码，手工验证登陆成功。<br><img src="https://image.3001.net/images/20161009/14760004176934.png!small"><br>(2)sql注入<br>万能密钥<br>admin’or ‘1’=’1<br>admin’ – -<br>admin’ # </p>
 <p>注入成功<br><img src="https://image.3001.net/images/20161009/14760004593118.png!small"></p>
-<h2 id="Medium"><a href="#Medium" class="headerlink" title="Medium"></a>Medium</h2><h2 id="源代码"><a href="#源代码" class="headerlink" title="源代码"></a>源代码</h2><?php
+<h2 id="Medium"><a href="#Medium" class="headerlink" title="Medium"></a>Medium</h2><p>源代码</p>
+<hr>
+<?php
 
 if(isset($_GET['Login'])){
 //Sanitiseusernameinput
@@ -247,9 +251,12 @@ mysql_close();
 }
 
 ?>
+
 <hr>
 <p>sql注入失效，但burtsuit仍然可用</p>
-<h2 id="High"><a href="#High" class="headerlink" title="High"></a>High</h2><h2 id="源代码-1"><a href="#源代码-1" class="headerlink" title="源代码"></a>源代码</h2><?php
+<h2 id="High"><a href="#High" class="headerlink" title="High"></a>High</h2><p>源代码</p>
+<hr>
+<?php
 
 if( isset( $_GET[ 'Login' ] ) ) {
     // Check Anti-CSRF token
@@ -293,7 +300,7 @@ generateSessionToken();
 ?><h2 id=""><a href="#" class="headerlink" title=" "></a> </h2><p>可以发现，每次发送的时候，都带上了一个 user_token，每次发送请求的时候 user_token 都是会变的，而 user_token 是来自于上一个数据包的。<br><img src="https://img2018.cnblogs.com/blog/1124357/201908/1124357-20190801155938323-247510334.jpg"><br>使用burpsuit爆破</p>
 <p>依次选择【Project options】-&gt;【Sessions】-&gt;【add】-&gt; 【add a Rule Description】-&gt; 【Run a macro(宏)】</p>
 <p>选择新建宏<br><img src="https://img2018.cnblogs.com/blog/1124357/201908/1124357-20190801155937317-848154105.jpg"><br>添加的时候，选择配置<br><img src="https://img2018.cnblogs.com/blog/1124357/201908/1124357-20190801155939617-165513722.jpg"><br><img src="https://img2018.cnblogs.com/blog/1124357/201908/1124357-20190801155938529-1012197189.jpg"></p>
-<h2 id="impossible"><a href="#impossible" class="headerlink" title="impossible"></a>impossible</h2><h2 id="源代码-2"><a href="#源代码-2" class="headerlink" title="源代码"></a>源代码</h2><?php
+<h2 id="impossible"><a href="#impossible" class="headerlink" title="impossible"></a>impossible</h2><h2 id="源代码"><a href="#源代码" class="headerlink" title="源代码"></a>源代码</h2><?php
 
 if( isset( $_POST[ 'Login' ] ) ) {
     // Check Anti-CSRF token
@@ -391,7 +398,9 @@ generateSessionToken();
 ?><h2 id="-1"><a href="#-1" class="headerlink" title=" "></a> </h2><p>错误三次后会锁定15分钟以上</p>
 <p>burp爆破关键词<br><img src="https://img2018.cnblogs.com/blog/1124357/201908/1124357-20190801155938064-1430455794.jpg"><br><img src="https://img2018.cnblogs.com/blog/1124357/201908/1124357-20190801155938250-1479654924.jpg"></p>
 <h1 id="第二题-Command-Injection"><a href="#第二题-Command-Injection" class="headerlink" title="第二题-Command-Injection"></a>第二题-Command-Injection</h1><p><img src="https://image.3001.net/images/20161016/14765776616648.png!small"></p>
-<h2 id="low-1"><a href="#low-1" class="headerlink" title="low"></a>low</h2><h2 id="源代码-3"><a href="#源代码-3" class="headerlink" title="源代码"></a>源代码</h2><?php 
+<h2 id="low-1"><a href="#low-1" class="headerlink" title="low"></a>low</h2><p>源代码</p>
+<hr>
+<?php 
 
 if( isset( $_POST[ 'Submit' ]  ) ) { 
 
@@ -423,7 +432,9 @@ if( isset( $_POST[ 'Submit' ]  ) ) {
 
 } 
 
-?><h2 id="-2"><a href="#-2" class="headerlink" title=" "></a> </h2><p>相关函数介绍 </p>
+?><p> </p>
+<hr>
+<p>相关函数介绍 </p>
 <p>stristr(string,search,before_search)</p>
 <p>stristr函数搜索字符串在另一字符串中的第一次出现，返回字符串的剩余部分（从匹配点），如果未找到所搜索的字符串，则返回 FALSE。参数string规定被搜索的字符串，参数search规定要搜索的字符串（如果该参数是数字，则搜索匹配该数字对应的 ASCII 值的字符），可选参数before_true为布尔型，默认为”false” ，如果设置为 “true”，函数将返回 search 参数第一次出现之前的字符串部分。</p>
 <p>php_uname(mode)</p>
@@ -432,7 +443,9 @@ if( isset( $_POST[ 'Submit' ]  ) ) {
 <p>漏洞利用</p>
 <p>window和linux系统都可以用&amp;&amp;来执行多条命令</p>
 <p>127.0.0.1&amp;&amp;net user<br><img src="https://img-blog.csdnimg.cn/20190615092332469.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FpXzY0,size_16,color_FFFFFF,t_70"></p>
-<h2 id="Medium-1"><a href="#Medium-1" class="headerlink" title="Medium"></a>Medium</h2><h2 id="源代码-4"><a href="#源代码-4" class="headerlink" title="源代码"></a>源代码</h2><?php 
+<h2 id="Medium-1"><a href="#Medium-1" class="headerlink" title="Medium"></a>Medium</h2><p>源代码</p>
+<hr>
+<?php 
 
 if( isset( $_POST[ 'Submit' ]  ) ) { 
 
@@ -484,7 +497,7 @@ if( isset( $_POST[ 'Submit' ]  ) ) {
 <p>漏洞利用</p>
 <p>1、127.0.0.1&amp;net user</p>
 <p>因为被过滤的只有”&amp;&amp;”与” ;”，所以”&amp;”不会受影响。<br>  ![]<a target="_blank" rel="noopener" href="https://img-blog.csdnimg.cn/20190615092359423.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FpXzY0,size_16,color_FFFFFF,t_70">https://img-blog.csdnimg.cn/20190615092359423.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FpXzY0,size_16,color_FFFFFF,t_70</a>)</p>
-<h2 id="High-1"><a href="#High-1" class="headerlink" title="High"></a>High</h2><h2 id="源代码-5"><a href="#源代码-5" class="headerlink" title="源代码"></a>源代码</h2><?php 
+<h2 id="High-1"><a href="#High-1" class="headerlink" title="High"></a>High</h2><h2 id="源代码-1"><a href="#源代码-1" class="headerlink" title="源代码"></a>源代码</h2><?php 
 
 if( isset( $_POST[ 'Submit' ]  ) ) { 
 
@@ -544,10 +557,10 @@ if( isset( $_POST[ 'Submit' ]  ) ) {
 
 } 
 
-?><h2 id="-3"><a href="#-3" class="headerlink" title=" "></a> </h2><p>漏洞利用</p>
+?><h2 id="-2"><a href="#-2" class="headerlink" title=" "></a> </h2><p>漏洞利用</p>
 <p>黑名单看似过滤了所有的非法字符，但仔细观察到是把”| ”（注意这里|后有一个空格）替换为空字符，于是 ”|”成了“漏网之鱼”。</p>
 <p>127.0.0.1|net user<br><img src="https://img-blog.csdnimg.cn/20190615092435426.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FpXzY0,size_16,color_FFFFFF,t_70"></p>
-<h2 id="impossible-1"><a href="#impossible-1" class="headerlink" title="impossible"></a>impossible</h2><h2 id="源代码-6"><a href="#源代码-6" class="headerlink" title="源代码"></a>源代码</h2><?php 
+<h2 id="impossible-1"><a href="#impossible-1" class="headerlink" title="impossible"></a>impossible</h2><h2 id="源代码-2"><a href="#源代码-2" class="headerlink" title="源代码"></a>源代码</h2><?php 
 
 if( isset( $_POST[ 'Submit' ]  ) ) { 
 
@@ -611,7 +624,7 @@ if( isset( $_POST[ 'Submit' ]  ) ) {
 
 generateSessionToken(); 
 
-?><h2 id="-4"><a href="#-4" class="headerlink" title=" "></a> </h2><h2 id="impossible等级，对命令注入行为正确防护。"><a href="#impossible等级，对命令注入行为正确防护。" class="headerlink" title="impossible等级，对命令注入行为正确防护。"></a>impossible等级，对命令注入行为正确防护。</h2><p>基础知识补充</p>
+?><h2 id="-3"><a href="#-3" class="headerlink" title=" "></a> </h2><h2 id="impossible等级，对命令注入行为正确防护。"><a href="#impossible等级，对命令注入行为正确防护。" class="headerlink" title="impossible等级，对命令注入行为正确防护。"></a>impossible等级，对命令注入行为正确防护。</h2><p>基础知识补充</p>
 <p>命令区别（&amp;、|、&amp;&amp;、||）</p>
 <p>&amp;起到连接命令的作用，不管前一条命令是否执行成功，下一条都会接着执行。</p>
 <p>|起到管道的作用，前一条命令的输出，作为下一条命令的输入，只打印最后一条命令的执行结果。</p>
@@ -650,7 +663,7 @@ if( isset( $_GET[ 'Change' ] ) ) {
 ?>
 <hr>
 <p>我们先对其抓包<br><img src="https://pics6.baidu.com/feed/bf096b63f6246b6063db7560e030c64a500fa218.png?token=3c675db8b5bea99d52b32d66762db004"><br><img src="https://pics5.baidu.com/feed/2fdda3cc7cd98d109809c16c2cf7640879ec90d9.png?token=bf67d2385e4585ff9935704e348aea6e"><br>也就是说，当我们访问<a target="_blank" rel="noopener" href="http://127.0.0.1/vulnerabilities/csrf/?password_new=123456&amp;password_conf=123456&amp;Change=Change%E6%88%91%E4%BB%AC%E7%9A%84%E5%AF%86%E7%A0%81%E5%B0%B1%E4%BC%9A%E6%94%B9%E5%8F%98%EF%BC%8C%E6%88%91%E4%BB%AC%E5%8F%AF%E4%BB%A5%E4%BC%AA%E9%80%A0%E8%BF%99%E6%9D%A1%E9%93%BE%E6%8E%A5%EF%BC%8C%E5%8F%91%E9%80%81%E7%BB%99%E5%8F%97%E5%AE%B3%E8%80%85%EF%BC%8C%E5%9C%A8%E4%B8%8D%E7%9F%A5%E4%B8%8D%E8%A7%89%E4%B8%AD%E5%AF%B9%E6%96%B9%E7%9A%84%E5%AF%86%E7%A0%81%E5%B0%B1%E4%BC%9A%E8%A2%AB%E4%BF%AE%E6%94%B9%E3%80%82">http://127.0.0.1/vulnerabilities/csrf/?password_new=123456&amp;password_conf=123456&amp;Change=Change我们的密码就会改变，我们可以伪造这条链接，发送给受害者，在不知不觉中对方的密码就会被修改。</a></p>
-<h2 id="Medium-2"><a href="#Medium-2" class="headerlink" title="Medium"></a>Medium</h2><h2 id="源代码-7"><a href="#源代码-7" class="headerlink" title="源代码"></a>源代码</h2><?php 
+<h2 id="Medium-2"><a href="#Medium-2" class="headerlink" title="Medium"></a>Medium</h2><h2 id="源代码-3"><a href="#源代码-3" class="headerlink" title="源代码"></a>源代码</h2><?php 
 
 if( isset( $_GET[ 'Change' ] ) ) { 
     // Checks to see where the request came from 
@@ -685,7 +698,7 @@ if( isset( $_GET[ 'Change' ] ) ) {
     mysql_close(); 
 } 
 
-?><h2 id="-5"><a href="#-5" class="headerlink" title=" "></a> </h2><p>可以看到，Medium级别的代码检查了保留变量 HTTP_REFERER（http包头的Referer参数的值，表示来源地址）中是否包含SERVER_NAME（http包头的Host参数，及要访问的主机名，这里是192.168.153.130），希望通过这种机制抵御CSRF攻击。</p>
+?><h2 id="-4"><a href="#-4" class="headerlink" title=" "></a> </h2><p>可以看到，Medium级别的代码检查了保留变量 HTTP_REFERER（http包头的Referer参数的值，表示来源地址）中是否包含SERVER_NAME（http包头的Host参数，及要访问的主机名，这里是192.168.153.130），希望通过这种机制抵御CSRF攻击。</p>
 <p>过滤规则是http包头的Referer参数的值中必须包含主机名（这里是192.168.153.130）</p>
 <p>我们可以将攻击页面命名为192.168.153.130.html（页面被放置在攻击者的服务器里，这里是10.4.253.2）就可以绕过了</p>
 <p>下面是Burpsuite的截图<br><img src="https://image.3001.net/images/20161031/1477895636890.png!small"></p>
@@ -727,7 +740,7 @@ if( isset( $_GET[ 'Change' ] ) ) {
 // Generate Anti-CSRF token 
 generateSessionToken(); 
 
-?><h2 id="-6"><a href="#-6" class="headerlink" title=" "></a> </h2><p>可以看到，High级别的代码加入了Anti-CSRF token机制，用户每次访问改密页面时，服务器会返回一个随机的token，向服务器发起请求时，需要提交token参数，而服务器在收到请求时，会优先检查token，只有token正确，才会处理客户端的请求。</p>
+?><h2 id="-5"><a href="#-5" class="headerlink" title=" "></a> </h2><p>可以看到，High级别的代码加入了Anti-CSRF token机制，用户每次访问改密页面时，服务器会返回一个随机的token，向服务器发起请求时，需要提交token参数，而服务器在收到请求时，会优先检查token，只有token正确，才会处理客户端的请求。</p>
 <h2 id="构造一个攻击页面，将其放置在攻击者的服务器，引诱受害者访问，从而完成CSRF攻击，下面是代码。"><a href="#构造一个攻击页面，将其放置在攻击者的服务器，引诱受害者访问，从而完成CSRF攻击，下面是代码。" class="headerlink" title="构造一个攻击页面，将其放置在攻击者的服务器，引诱受害者访问，从而完成CSRF攻击，下面是代码。"></a>构造一个攻击页面，将其放置在攻击者的服务器，引诱受害者访问，从而完成CSRF攻击，下面是代码。</h2><script type="text/javascript">
 
     function attack()
@@ -767,7 +780,7 @@ generateSessionToken();
 
 <hr>
 <p>攻击思路是当受害者点击进入这个页面，脚本会通过一个看不见框架偷偷访问修改密码的页面，获取页面中的token，并向服务器发送改密请求，以完成CSRF攻击。</p>
-<h2 id="impossible-2"><a href="#impossible-2" class="headerlink" title="impossible"></a>impossible</h2><h2 id="源代码-8"><a href="#源代码-8" class="headerlink" title="源代码"></a>源代码</h2><?php 
+<h2 id="impossible-2"><a href="#impossible-2" class="headerlink" title="impossible"></a>impossible</h2><h2 id="源代码-4"><a href="#源代码-4" class="headerlink" title="源代码"></a>源代码</h2><?php 
 
 if( isset( $_GET[ 'Change' ] ) ) { 
     // Check Anti-CSRF token 
@@ -814,12 +827,12 @@ if( isset( $_GET[ 'Change' ] ) ) {
 // Generate Anti-CSRF token 
 generateSessionToken(); 
 
-?><h2 id="-7"><a href="#-7" class="headerlink" title=" "></a> </h2><p>可以看到，Impossible级别的代码要求用户输入原始密码，攻击者在不知道原始密码的情况下，无法进行CSRF攻击。</p>
+?><h2 id="-6"><a href="#-6" class="headerlink" title=" "></a> </h2><p>可以看到，Impossible级别的代码要求用户输入原始密码，攻击者在不知道原始密码的情况下，无法进行CSRF攻击。</p>
 <h1 id="第四题File-Inclusion"><a href="#第四题File-Inclusion" class="headerlink" title="第四题File-Inclusion"></a>第四题File-Inclusion</h1><p><img src="https://image.3001.net/images/20161106/14784220172185.png!small"></p>
-<h2 id="low-3"><a href="#low-3" class="headerlink" title="low"></a>low</h2><h2 id="源代码-9"><a href="#源代码-9" class="headerlink" title="源代码"></a>源代码</h2><?php 
+<h2 id="low-3"><a href="#low-3" class="headerlink" title="low"></a>low</h2><h2 id="源代码-5"><a href="#源代码-5" class="headerlink" title="源代码"></a>源代码</h2><?php 
 // The page we wish to display 
 $file = $_GET[ 'page' ]; 
-?><h2 id="-8"><a href="#-8" class="headerlink" title=" "></a> </h2><p>我们先点击file1.php效果如下：<br><img src="https://pics4.baidu.com/feed/48540923dd54564e458a3432b8164084d0584f19.png?token=8e0df337e643d14699f8db6f835c1bef"><br>在burp中对其抓包<br><img src="https://pics4.baidu.com/feed/91529822720e0cf3165ae065028e2e19bc09aaca.png?token=d4a6d4ad5105c98fa81a5e9f0778d4cb"><br>读取任意文件测试，我们在D盘新建一个txt构造下面命令：读取d盘下的bbskali.txt文件<br><img src="https://pics2.baidu.com/feed/838ba61ea8d3fd1f21b1fa183a86f91994ca5fa2.png?token=a1414ce9fd591db547742e5071095679"><br>访问远程文件<br><img src="https://pics3.baidu.com/feed/d1a20cf431adcbefca128176bd67f2dba2cc9fef.png?token=d74cdf0e394b5f46d043286cb3c4e6f3"></p>
+?><h2 id="-7"><a href="#-7" class="headerlink" title=" "></a> </h2><p>我们先点击file1.php效果如下：<br><img src="https://pics4.baidu.com/feed/48540923dd54564e458a3432b8164084d0584f19.png?token=8e0df337e643d14699f8db6f835c1bef"><br>在burp中对其抓包<br><img src="https://pics4.baidu.com/feed/91529822720e0cf3165ae065028e2e19bc09aaca.png?token=d4a6d4ad5105c98fa81a5e9f0778d4cb"><br>读取任意文件测试，我们在D盘新建一个txt构造下面命令：读取d盘下的bbskali.txt文件<br><img src="https://pics2.baidu.com/feed/838ba61ea8d3fd1f21b1fa183a86f91994ca5fa2.png?token=a1414ce9fd591db547742e5071095679"><br>访问远程文件<br><img src="https://pics3.baidu.com/feed/d1a20cf431adcbefca128176bd67f2dba2cc9fef.png?token=d74cdf0e394b5f46d043286cb3c4e6f3"></p>
 <h2 id="medium"><a href="#medium" class="headerlink" title="medium"></a>medium</h2><hr>
 <p>&lt;php</p>
 <p>//Thepagewewishtodisplay<br>$file=$_GET[‘page’];</p>
@@ -839,7 +852,7 @@ if( !fnmatch( "file*", $file ) && $file != "include.php" ) { 
     echo "ERROR: File not found!"; 
     exit; 
 } 
-?><h2 id="-9"><a href="#-9" class="headerlink" title="  "></a>  </h2><p>High级别的代码使用了fnmatch函数检查page参数，要求page参数的开头必须是file，服务器才会去包含相应的文件。</p>
+?><h2 id="-8"><a href="#-8" class="headerlink" title="  "></a>  </h2><p>High级别的代码使用了fnmatch函数检查page参数，要求page参数的开头必须是file，服务器才会去包含相应的文件。</p>
 <p>本地文件包含<br><img src="https://img-blog.csdnimg.cn/20190616173806526.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FpXzY0,size_16,color_FFFFFF,t_70"></p>
 <h2 id="impossible-3"><a href="#impossible-3" class="headerlink" title="impossible"></a>impossible</h2><hr>
 <?php 
@@ -851,9 +864,9 @@ if( $file != "include.php" && $file != "file1.php" && $file != "file2.php" && $f
     echo "ERROR: File not found!"; 
     exit; 
 } 
-?><h2 id="-10"><a href="#-10" class="headerlink" title=" "></a> </h2><p>Impossible级别的代码彻底杜绝了文件包含漏洞</p>
+?><h2 id="-9"><a href="#-9" class="headerlink" title=" "></a> </h2><p>Impossible级别的代码彻底杜绝了文件包含漏洞</p>
 <h1 id="第五题-File-Upload"><a href="#第五题-File-Upload" class="headerlink" title="第五题-File-Upload"></a>第五题-File-Upload</h1><p><img src="https://image.3001.net/images/20161108/14785910509354.png!small"></p>
-<h2 id="Low"><a href="#Low" class="headerlink" title="Low"></a>Low</h2><h2 id="源代码-10"><a href="#源代码-10" class="headerlink" title="源代码"></a>源代码</h2><?php 
+<h2 id="Low"><a href="#Low" class="headerlink" title="Low"></a>Low</h2><h2 id="源代码-6"><a href="#源代码-6" class="headerlink" title="源代码"></a>源代码</h2><?php 
 
 if( isset( $_POST[ 'Upload' ] ) ) { 
     // Where are we going to be writing to? 
@@ -871,7 +884,7 @@ if( isset( $_POST[ 'Upload' ] ) ) {
     } 
 } 
 
-?><h2 id="-11"><a href="#-11" class="headerlink" title=" "></a> </h2><p>上传文件一句话木马<br><img src="https://image.3001.net/images/20161108/14785912161713.png!small"><br>上传成功，并且返回了上传路径<br><img src="https://image.3001.net/images/20161108/1478591243183.png!small"><br>打开中国菜刀，右键添加，</p>
+?><h2 id="-10"><a href="#-10" class="headerlink" title=" "></a> </h2><p>上传文件一句话木马<br><img src="https://image.3001.net/images/20161108/14785912161713.png!small"><br>上传成功，并且返回了上传路径<br><img src="https://image.3001.net/images/20161108/1478591243183.png!small"><br>打开中国菜刀，右键添加，</p>
 <p>地址栏填入上传文件所在路径<a target="_blank" rel="noopener" href="http://192.168.153.130/dvwa/hackable/uploads/hack.php%EF%BC%8C">http://192.168.153.130/dvwa/hackable/uploads/hack.php，</a></p>
 <p>参数名（一句话木马口令）为apple。</p>
 <p><img src="https://image.3001.net/images/20161108/14785912718652.png!small"><br>然后菜刀就会通过向服务器发送包含apple参数的post请求，在服务器上执行任意命令，获取webshell权限。</p>
@@ -909,9 +922,9 @@ if( isset( $_POST[ 'Upload' ] ) ) {
     } 
 } 
 
-?><h2 id="-12"><a href="#-12" class="headerlink" title=" "></a> </h2><p>Medium级别的代码对上传文件的类型、大小做了限制，要求文件类型必须是jpeg或者png，大小不能超过100000B。</p>
+?><h2 id="-11"><a href="#-11" class="headerlink" title=" "></a> </h2><p>Medium级别的代码对上传文件的类型、大小做了限制，要求文件类型必须是jpeg或者png，大小不能超过100000B。</p>
 <p>因为采用的是一句话木马，所以文件大小不会有问题，至于文件类型的检查，尝试修改文件名为hack.png。<br><img src="https://image.3001.net/images/20161108/14785914897497.png!small"><br>抓包。<br><img src="https://image.3001.net/images/20161108/1478591669326![]()!small"><br>可以看到文件类型为image/png，尝试修改filename为hack.php。<br><img src="https://image.3001.net/images/20161108/14785917089423.png!small"><br>上传成功。<br><img src="https://image.3001.net/images/20161108/14785917335700.png!small"><br>上菜刀，获取webshell权限。<br><img src="https://image.3001.net/images/20161108/14785917654899.png!small"></p>
-<h2 id="high-2"><a href="#high-2" class="headerlink" title="high"></a>high</h2><h2 id="源代码-11"><a href="#源代码-11" class="headerlink" title="源代码"></a>源代码</h2><?php 
+<h2 id="high-2"><a href="#high-2" class="headerlink" title="high"></a>high</h2><h2 id="源代码-7"><a href="#源代码-7" class="headerlink" title="源代码"></a>源代码</h2><?php 
 
 if( isset( $_POST[ 'Upload' ] ) ) { 
     // Where are we going to be writing to? 
@@ -945,7 +958,7 @@ if( isset( $_POST[ 'Upload' ] ) ) {
     } 
 } 
 
-?><h2 id="-13"><a href="#-13" class="headerlink" title=" "></a> </h2><p>High级别的代码读取文件名中最后一个”.”后的字符串，期望通过文件名来限制文件类型，因此要求上传文件名形式必须是”*.jpg”、”*.jpeg” 、”*.png”之一。同时，getimagesize函数更是限制了上传文件的文件头必须为图像类型。</p>
+?><h2 id="-12"><a href="#-12" class="headerlink" title=" "></a> </h2><p>High级别的代码读取文件名中最后一个”.”后的字符串，期望通过文件名来限制文件类型，因此要求上传文件名形式必须是”*.jpg”、”*.jpeg” 、”*.png”之一。同时，getimagesize函数更是限制了上传文件的文件头必须为图像类型。</p>
 <p>首先利用copy将一句话木马文件1.php与图片文件1.jpg合并生成hack.jpg，打开可以看到，一句话木马藏到了最后。<br><img src="https://image.3001.net/images/20161108/14785919855138.png!small"><br>顺利通过文件头检查，可以成功上传。<br><img src="https://image.3001.net/images/20161108/14785920131063.png!small"><br>上菜刀，右键添加shell，成功拿到webshell。<br><img src="https://image.3001.net/images/20161108/14785921471182.png!small"></p>
 <h2 id="impossible-4"><a href="#impossible-4" class="headerlink" title="impossible"></a>impossible</h2><hr>
 <?php 
@@ -1009,9 +1022,9 @@ if( isset( $_POST[ 'Upload' ] ) ) {
 // Generate Anti-CSRF token 
 generateSessionToken(); 
 
-?><h2 id="-14"><a href="#-14" class="headerlink" title=" "></a> </h2><p>Impossible级别的代码对上传文件进行了重命名（为md5值，导致%00截断无法绕过过滤规则），加入Anti-CSRF token防护CSRF攻击，同时对文件的内容作了严格的检查，导致攻击者无法上传含有恶意脚本的文件。</p>
+?><h2 id="-13"><a href="#-13" class="headerlink" title=" "></a> </h2><p>Impossible级别的代码对上传文件进行了重命名（为md5值，导致%00截断无法绕过过滤规则），加入Anti-CSRF token防护CSRF攻击，同时对文件的内容作了严格的检查，导致攻击者无法上传含有恶意脚本的文件。</p>
 <h1 id="第六题-Insecure-CAPTCHA"><a href="#第六题-Insecure-CAPTCHA" class="headerlink" title="第六题-Insecure-CAPTCHA"></a>第六题-Insecure-CAPTCHA</h1><p><img src="https://image.3001.net/images/20161110/1478762521859.png!small"></p>
-<h2 id="low-4"><a href="#low-4" class="headerlink" title="low"></a>low</h2><h2 id="源代码-12"><a href="#源代码-12" class="headerlink" title="源代码"></a>源代码</h2><?php 
+<h2 id="low-4"><a href="#low-4" class="headerlink" title="low"></a>low</h2><h2 id="源代码-8"><a href="#源代码-8" class="headerlink" title="源代码"></a>源代码</h2><?php 
 
 if( isset( $_POST[ 'Change' ] ) && ( $_POST[ 'step' ] == '1' ) ) { 
     // Hide the CAPTCHA form 
@@ -1085,9 +1098,9 @@ if( isset( $_POST[ 'Change' ] ) && ( $_POST[ 'step' ] == '2' ) ) {
     mysql_close(); 
 } 
 
-?><h2 id="-15"><a href="#-15" class="headerlink" title=" "></a> </h2><p>服务器将改密操作分成了两步，第一步检查用户输入的验证码，验证通过后，服务器返回表单，第二步客户端提交post请求，服务器完成更改密码的操作。但是，这其中存在明显的逻辑漏洞，服务器仅仅通过检查Change、step 参数来判断用户是否已经输入了正确的验证码。</p>
+?><h2 id="-14"><a href="#-14" class="headerlink" title=" "></a> </h2><p>服务器将改密操作分成了两步，第一步检查用户输入的验证码，验证通过后，服务器返回表单，第二步客户端提交post请求，服务器完成更改密码的操作。但是，这其中存在明显的逻辑漏洞，服务器仅仅通过检查Change、step 参数来判断用户是否已经输入了正确的验证码。</p>
 <p>首先输入密码，点击Change按钮，抓包：<br><img src="https://image.3001.net/images/20161110/1478762833724![]()!small"><br>修改密码成功：<br><img src="https://image.3001.net/images/20161110/1478762911998.png!small"></p>
-<h2 id="medium-1"><a href="#medium-1" class="headerlink" title="medium"></a>medium</h2><h2 id="源代码-13"><a href="#源代码-13" class="headerlink" title="源代码"></a>源代码</h2><?php 
+<h2 id="medium-1"><a href="#medium-1" class="headerlink" title="medium"></a>medium</h2><h2 id="源代码-9"><a href="#源代码-9" class="headerlink" title="源代码"></a>源代码</h2><?php 
 
 if( isset( $_POST[ 'Change' ] ) && ( $_POST[ 'step' ] == '1' ) ) { 
     // Hide the CAPTCHA form 
@@ -1169,7 +1182,7 @@ if( isset( $_POST[ 'Change' ] ) && ( $_POST[ 'step' ] == '2' ) ) {
     mysql_close(); 
 } 
 
-?><h2 id="-16"><a href="#-16" class="headerlink" title=" "></a> </h2><p>可以看到，Medium级别的代码在第二步验证时，参加了对参数passed_captcha的检查，如果参数值为true，则认为用户已经通过了验证码检查，然而用户依然可以通过伪造参数绕过验证，本质上来说，这与Low级别的验证没有任何区别。<br>抓到的包：<br><img src="https://image.3001.net/images/20161110/1478763222683.png!small"><br>更改之后的包：<br><img src="https://image.3001.net/images/20161110/14787632525623.png!small"><br>成功<br><img src="https://image.3001.net/images/20161110/14787632811739.png!small"></p>
+?><h2 id="-15"><a href="#-15" class="headerlink" title=" "></a> </h2><p>可以看到，Medium级别的代码在第二步验证时，参加了对参数passed_captcha的检查，如果参数值为true，则认为用户已经通过了验证码检查，然而用户依然可以通过伪造参数绕过验证，本质上来说，这与Low级别的验证没有任何区别。<br>抓到的包：<br><img src="https://image.3001.net/images/20161110/1478763222683.png!small"><br>更改之后的包：<br><img src="https://image.3001.net/images/20161110/14787632525623.png!small"><br>成功<br><img src="https://image.3001.net/images/20161110/14787632811739.png!small"></p>
 <h2 id="high-3"><a href="#high-3" class="headerlink" title="high"></a>high</h2><hr>
 <?php 
 
@@ -1219,8 +1232,8 @@ if( isset( $_POST[ 'Change' ] ) ) {
 // Generate Anti-CSRF token 
 generateSessionToken(); 
 
-?><h2 id="-17"><a href="#-17" class="headerlink" title=" "></a> </h2><p>服务器的验证逻辑是当$resp是false，并且参数recaptcha_response_field不等于hidd3n_valu3或者http包头的User-Agent参数不等于reCAPTCHA时，就认为验证码输入错误，反之则认为已经通过了验证码的检查。<br>抓包<br><img src="https://image.3001.net/images/20161110/14787634573020.png!small"><br>更改参数recaptcha_response_field以及http包头的User-Agent：<br><img src="https://image.3001.net/images/20161110/1478763487811![]()!small"><br>密码修改成功：<br><img src="https://image.3001.net/images/20161110/14787635158708.png!small"></p>
-<h2 id="impossible-5"><a href="#impossible-5" class="headerlink" title="impossible"></a>impossible</h2><h2 id="源代码-14"><a href="#源代码-14" class="headerlink" title="源代码"></a>源代码</h2><p>if( isset( $_POST[ ‘Change’ ] ) ) {<br>    // Check Anti-CSRF token<br>    checkToken( $_REQUEST[ ‘user_token’ ], $_SESSION[ ‘session_token’ ], ‘index.php’ ); </p>
+?><h2 id="-16"><a href="#-16" class="headerlink" title=" "></a> </h2><p>服务器的验证逻辑是当$resp是false，并且参数recaptcha_response_field不等于hidd3n_valu3或者http包头的User-Agent参数不等于reCAPTCHA时，就认为验证码输入错误，反之则认为已经通过了验证码的检查。<br>抓包<br><img src="https://image.3001.net/images/20161110/14787634573020.png!small"><br>更改参数recaptcha_response_field以及http包头的User-Agent：<br><img src="https://image.3001.net/images/20161110/1478763487811![]()!small"><br>密码修改成功：<br><img src="https://image.3001.net/images/20161110/14787635158708.png!small"></p>
+<h2 id="impossible-5"><a href="#impossible-5" class="headerlink" title="impossible"></a>impossible</h2><h2 id="源代码-10"><a href="#源代码-10" class="headerlink" title="源代码"></a>源代码</h2><p>if( isset( $_POST[ ‘Change’ ] ) ) {<br>    // Check Anti-CSRF token<br>    checkToken( $_REQUEST[ ‘user_token’ ], $_SESSION[ ‘session_token’ ], ‘index.php’ ); </p>
 <pre><code>// Hide the CAPTCHA form 
 $hide_form = true; 
 
@@ -1280,7 +1293,7 @@ else &#123;
 <p>} </p>
 <p>// Generate Anti-CSRF token<br>generateSessionToken(); </p>
 <h2 id="gt"><a href="#gt" class="headerlink" title="?&gt; "></a>?&gt; </h2><p>Impossible级别的代码增加了Anti-CSRF token 机制防御CSRF攻击，利用PDO技术防护sql注入，验证过程终于不再分成两部分了，验证码无法绕过，同时要求用户输入之前的密码，进一步加强了身份认证。</p>
-<h1 id="第七题-SQL-Injection"><a href="#第七题-SQL-Injection" class="headerlink" title="第七题-SQL-Injection"></a>第七题-SQL-Injection</h1><h2 id="low-5"><a href="#low-5" class="headerlink" title="low"></a>low</h2><h2 id="源代码-15"><a href="#源代码-15" class="headerlink" title="源代码"></a>源代码</h2><?php 
+<h1 id="第七题-SQL-Injection"><a href="#第七题-SQL-Injection" class="headerlink" title="第七题-SQL-Injection"></a>第七题-SQL-Injection</h1><h2 id="low-5"><a href="#low-5" class="headerlink" title="low"></a>low</h2><h2 id="源代码-11"><a href="#源代码-11" class="headerlink" title="源代码"></a>源代码</h2><?php 
 
 if( isset( $_REQUEST[ 'Submit' ] ) ) { 
     // Get input 
@@ -1308,7 +1321,7 @@ if( isset( $_REQUEST[ 'Submit' ] ) ) {
     mysql_close(); 
 } 
 
-?><h2 id="-18"><a href="#-18" class="headerlink" title=" "></a> </h2><p>Low级别的代码对来自客户端的参数id没有进行任何的检查与过滤，存在明显的SQL注入。</p>
+?><h2 id="-17"><a href="#-17" class="headerlink" title=" "></a> </h2><p>Low级别的代码对来自客户端的参数id没有进行任何的检查与过滤，存在明显的SQL注入。</p>
 <p>输入1，查询成功：</p>
 <p>输入1’and ‘1’ =’2，查询失败，返回结果为空：</p>
 <p>输入1’or ‘1234 ’=’1234，查询成功：</p>
@@ -1344,7 +1357,7 @@ if( isset( $_POST[ 'Submit' ] ) ) {
     //mysql_close(); 
 } 
 
-?><h2 id="-19"><a href="#-19" class="headerlink" title=" "></a> </h2><p>Medium级别的代码利用mysql_real_escape_string函数对特殊符号\x00,\n,\r,,‘,”,\x1a进行转义，同时前端页面设置了下拉选择表单，希望以此来控制用户的输入。<br>1.判断是否存在注入，注入是字符型还是数字型</p>
+?><h2 id="-18"><a href="#-18" class="headerlink" title=" "></a> </h2><p>Medium级别的代码利用mysql_real_escape_string函数对特殊符号\x00,\n,\r,,‘,”,\x1a进行转义，同时前端页面设置了下拉选择表单，希望以此来控制用户的输入。<br>1.判断是否存在注入，注入是字符型还是数字型</p>
 <p>抓包更改参数id为1 or 1=1 #，查询成功：</p>
 <p><img src="https://image.3001.net/images/20161122/1479798808442.png!small"></p>
 <p>说明存在数字型注入。</p>
@@ -1372,7 +1385,7 @@ if( isset( $_POST[ 'Submit' ] ) ) {
 <p>7.下载数据<br>抓包修改参数id为1 or 1=1 union select group_concat(user_id,first_name,last_name),group_concat(password) from users #，查询成功：</p>
 <p><img src="https://image.3001.net/images/20161122/14798013767789.png!small"></p>
 <p>这样就得到了users表中所有用户的user_id,first_name,last_name,password的数据</p>
-<h2 id="High-2"><a href="#High-2" class="headerlink" title="High"></a>High</h2><h2 id="源代码-16"><a href="#源代码-16" class="headerlink" title="源代码"></a>源代码</h2><?php 
+<h2 id="High-2"><a href="#High-2" class="headerlink" title="High"></a>High</h2><h2 id="源代码-12"><a href="#源代码-12" class="headerlink" title="源代码"></a>源代码</h2><?php 
 
 if( isset( $_SESSION [ 'id' ] ) ) { 
     // Get input 
@@ -1400,13 +1413,13 @@ if( isset( $_SESSION [ 'id' ] ) ) {
     mysql_close(); 
 } 
 
-?><h2 id="-20"><a href="#-20" class="headerlink" title=" "></a> </h2><p>可以看到，与Medium级别的代码相比，High级别的只是在SQL查询语句中添加了LIMIT 1，希望以此控制只输出一个结果。</p>
+?><h2 id="-19"><a href="#-19" class="headerlink" title=" "></a> </h2><p>可以看到，与Medium级别的代码相比，High级别的只是在SQL查询语句中添加了LIMIT 1，希望以此控制只输出一个结果。</p>
 <p>虽然添加了LIMIT 1，但是我们可以通过#将其注释掉。由于手工注入的过程与Low级别基本一样，直接最后一步演示下载数据。</p>
 <p>输入1 or 1=1 union select group_concat(user_id,first_name,last_name),group_concat(password) from users #，查询成功：</p>
 <p><img src="https://image.3001.net/images/20161122/14798014536165.png!small"></p>
 <p>需要特别提到的是，High级别的查询提交页面与查询结果显示页面不是同一个，也没有执行302跳转，这样做的目的是为了防止一般的sqlmap注入，因为sqlmap在注入过程中，无法在查询提交页面上获取查询的结果，没有了反馈，也就没办法进一步注入。</p>
 <p><img src="https://image.3001.net/images/20161122/14797991619669.png!small"></p>
-<h2 id="impossible-6"><a href="#impossible-6" class="headerlink" title="impossible"></a>impossible</h2><h2 id="源代码-17"><a href="#源代码-17" class="headerlink" title="源代码"></a>源代码</h2><?php 
+<h2 id="impossible-6"><a href="#impossible-6" class="headerlink" title="impossible"></a>impossible</h2><h2 id="源代码-13"><a href="#源代码-13" class="headerlink" title="源代码"></a>源代码</h2><?php 
 
 if( isset( $_GET[ 'Submit' ] ) ) { 
     // Check Anti-CSRF token 
@@ -1438,8 +1451,8 @@ if( isset( $_GET[ 'Submit' ] ) ) {
 // Generate Anti-CSRF token 
 generateSessionToken(); 
 
-?><h2 id="-21"><a href="#-21" class="headerlink" title=" "></a> </h2><p>Impossible级别的代码采用了PDO技术，划清了代码与数据的界限，有效防御SQL注入，同时只有返回的查询结果数量为一时，才会成功输出，这样就有效预防了“脱裤”，Anti-CSRFtoken机制的加入了进一步提高了安全性。</p>
-<h1 id="第八题-SQL-Injection-Blind"><a href="#第八题-SQL-Injection-Blind" class="headerlink" title="第八题-SQL-Injection-(Blind)"></a>第八题-SQL-Injection-(Blind)</h1><h2 id="Low-1"><a href="#Low-1" class="headerlink" title="Low"></a>Low</h2><h2 id="源代码-18"><a href="#源代码-18" class="headerlink" title="源代码"></a>源代码</h2><?php 
+?><h2 id="-20"><a href="#-20" class="headerlink" title=" "></a> </h2><p>Impossible级别的代码采用了PDO技术，划清了代码与数据的界限，有效防御SQL注入，同时只有返回的查询结果数量为一时，才会成功输出，这样就有效预防了“脱裤”，Anti-CSRFtoken机制的加入了进一步提高了安全性。</p>
+<h1 id="第八题-SQL-Injection-Blind"><a href="#第八题-SQL-Injection-Blind" class="headerlink" title="第八题-SQL-Injection-(Blind)"></a>第八题-SQL-Injection-(Blind)</h1><h2 id="Low-1"><a href="#Low-1" class="headerlink" title="Low"></a>Low</h2><h2 id="源代码-14"><a href="#源代码-14" class="headerlink" title="源代码"></a>源代码</h2><?php 
 
 if( isset( $_GET[ 'Submit' ] ) ) { 
     // Get input 
@@ -1500,7 +1513,7 @@ if( isset( $_GET[ 'Submit' ] ) ) {
 <h2 id="1’-and-if-length-substr-select-column-name-from-information-schema-columns-where-table-name-’users’-limit-0-1-1-7-sleep-5-1-明显延迟"><a href="#1’-and-if-length-substr-select-column-name-from-information-schema-columns-where-table-name-’users’-limit-0-1-1-7-sleep-5-1-明显延迟" class="headerlink" title="1’ and if(length(substr((select column_name from information_schema.columns where table_name= ’users’ limit 0,1),1))=7,sleep(5),1) # 明显延迟"></a>1’ and if(length(substr((select column_name from information_schema.columns where table_name= ’users’ limit 0,1),1))=7,sleep(5),1) # 明显延迟</h2><p>说明users表的第一个字段长度为7个字符。</p>
 <p>采用二分法即可猜解出各个字段名。</p>
 <p>5.猜解数据<br>同样采用二分法。</p>
-<h2 id="Medium-4"><a href="#Medium-4" class="headerlink" title="Medium"></a>Medium</h2><h2 id="源代码-19"><a href="#源代码-19" class="headerlink" title="源代码 "></a>源代码 </h2><?php 
+<h2 id="Medium-4"><a href="#Medium-4" class="headerlink" title="Medium"></a>Medium</h2><h2 id="源代码-15"><a href="#源代码-15" class="headerlink" title="源代码 "></a>源代码 </h2><?php 
 
 if( isset( $_POST[ 'Submit' ]  ) ) { 
     // Get input 
@@ -1525,13 +1538,13 @@ if( isset( $_POST[ 'Submit' ]  ) ) {
     //mysql_close(); 
 } 
 
-?><h2 id="-22"><a href="#-22" class="headerlink" title=" "></a> </h2><p>Medium级别的代码利用mysql_real_escape_string函数对特殊符号</p>
+?><h2 id="-21"><a href="#-21" class="headerlink" title=" "></a> </h2><p>Medium级别的代码利用mysql_real_escape_string函数对特殊符号</p>
 <p>\x00,\n,\r,,‘,”,\x1a进行转义，同时前端页面设置了下拉选择表单，希望以此来控制用户的输入。</p>
 <p>使用基于时间的盲注：</p>
 <p>抓包改参数id为1 and if(length(database())=4,sleep(5),1) #，明显延迟，说明数据库名的长度为4个字符；</p>
 <p>抓包改参数id为1 and if(length(substr((select table_name from information_schema.tables where table_schema=database() limit 0,1),1))=9,sleep(5),1) #，明显延迟，说明数据中的第一个表名长度为9个字符；</p>
 <p>抓包改参数id为1 and if((select count(column_name) from information_schema.columns where table_name=0x7573657273 )=8,sleep(5),1) #，明显延迟，说明uers表有8个字段。</p>
-<h2 id="High-3"><a href="#High-3" class="headerlink" title="High"></a>High</h2><h2 id="源代码-20"><a href="#源代码-20" class="headerlink" title="源代码"></a>源代码</h2><?php 
+<h2 id="High-3"><a href="#High-3" class="headerlink" title="High"></a>High</h2><h2 id="源代码-16"><a href="#源代码-16" class="headerlink" title="源代码"></a>源代码</h2><?php 
 
 if( isset( $_COOKIE[ 'id' ] ) ) { 
     // Get input 
@@ -1563,10 +1576,10 @@ if( isset( $_COOKIE[ 'id' ] ) ) {
     mysql_close(); 
 } 
 
-?><h2 id="-23"><a href="#-23" class="headerlink" title=" "></a> </h2><p>High级别的代码利用cookie传递参数id，当SQL查询结果为空时，会执行函数sleep(seconds)，目的是为了扰乱基于时间的盲注。同时在 SQL查询语句中添加了LIMIT 1，希望以此控制只输出一个结果。</p>
+?><h2 id="-22"><a href="#-22" class="headerlink" title=" "></a> </h2><p>High级别的代码利用cookie传递参数id，当SQL查询结果为空时，会执行函数sleep(seconds)，目的是为了扰乱基于时间的盲注。同时在 SQL查询语句中添加了LIMIT 1，希望以此控制只输出一个结果。</p>
 <h2 id="虽然添加了LIMIT-1，但是我们可以通过-将其注释掉。但由于服务器端执行sleep函数，会使得基于时间盲注的准确性受到影响，这里我们可以使用基于布尔的盲注："><a href="#虽然添加了LIMIT-1，但是我们可以通过-将其注释掉。但由于服务器端执行sleep函数，会使得基于时间盲注的准确性受到影响，这里我们可以使用基于布尔的盲注：" class="headerlink" title="虽然添加了LIMIT 1，但是我们可以通过#将其注释掉。但由于服务器端执行sleep函数，会使得基于时间盲注的准确性受到影响，这里我们可以使用基于布尔的盲注："></a>虽然添加了LIMIT 1，但是我们可以通过#将其注释掉。但由于服务器端执行sleep函数，会使得基于时间盲注的准确性受到影响，这里我们可以使用基于布尔的盲注：</h2><p>抓包将cookie中参数id改为1’ and length(database())=4 #，显示存在，说明数据库名的长度为4个字符；</p>
 <p>抓包将cookie中参数id改为1’ and length(substr(( select table_name from information_schema.tables where table_schema=database() limit 0,1),1))=9 #，显示存在，说明数据中的第一个表名长度为9个字符；</p>
-<h2 id="抓包将cookie中参数id改为1’-and-select-count-column-name-from-information-schema-columns-where-table-name-0x7573657273-8-，（0x7573657273-为users的16进制），显示存在，说明uers表有8个字段。"><a href="#抓包将cookie中参数id改为1’-and-select-count-column-name-from-information-schema-columns-where-table-name-0x7573657273-8-，（0x7573657273-为users的16进制），显示存在，说明uers表有8个字段。" class="headerlink" title="抓包将cookie中参数id改为1’ and (select count(column_name) from information_schema.columns where table_name=0x7573657273)=8 #，（0x7573657273 为users的16进制），显示存在，说明uers表有8个字段。"></a>抓包将cookie中参数id改为1’ and (select count(column_name) from information_schema.columns where table_name=0x7573657273)=8 #，（0x7573657273 为users的16进制），显示存在，说明uers表有8个字段。</h2><h2 id="Impossible"><a href="#Impossible" class="headerlink" title="Impossible"></a>Impossible</h2><h2 id="源代码-21"><a href="#源代码-21" class="headerlink" title="源代码"></a>源代码</h2><?php 
+<h2 id="抓包将cookie中参数id改为1’-and-select-count-column-name-from-information-schema-columns-where-table-name-0x7573657273-8-，（0x7573657273-为users的16进制），显示存在，说明uers表有8个字段。"><a href="#抓包将cookie中参数id改为1’-and-select-count-column-name-from-information-schema-columns-where-table-name-0x7573657273-8-，（0x7573657273-为users的16进制），显示存在，说明uers表有8个字段。" class="headerlink" title="抓包将cookie中参数id改为1’ and (select count(column_name) from information_schema.columns where table_name=0x7573657273)=8 #，（0x7573657273 为users的16进制），显示存在，说明uers表有8个字段。"></a>抓包将cookie中参数id改为1’ and (select count(column_name) from information_schema.columns where table_name=0x7573657273)=8 #，（0x7573657273 为users的16进制），显示存在，说明uers表有8个字段。</h2><h2 id="Impossible"><a href="#Impossible" class="headerlink" title="Impossible"></a>Impossible</h2><h2 id="源代码-17"><a href="#源代码-17" class="headerlink" title="源代码"></a>源代码</h2><?php 
 
 if( isset( $_GET[ 'Submit' ] ) ) { 
     // Check Anti-CSRF token 
@@ -1600,8 +1613,8 @@ if( isset( $_GET[ 'Submit' ] ) ) {
 // Generate Anti-CSRF token 
 generateSessionToken(); 
 
-?><h2 id="-24"><a href="#-24" class="headerlink" title=" "></a> </h2><p>可以看到，Impossible级别的代码采用了PDO技术，划清了代码与数据的界限，有效防御SQL注入，Anti-CSRF token机制的加入了进一步提高了安全性。</p>
-<h1 id="第九题-XSS-Reflected"><a href="#第九题-XSS-Reflected" class="headerlink" title="第九题-XSS-(Reflected)"></a>第九题-XSS-(Reflected)</h1><h2 id="Low-2"><a href="#Low-2" class="headerlink" title="Low"></a>Low</h2><h2 id="源代码-22"><a href="#源代码-22" class="headerlink" title="源代码"></a>源代码</h2><?php 
+?><h2 id="-23"><a href="#-23" class="headerlink" title=" "></a> </h2><p>可以看到，Impossible级别的代码采用了PDO技术，划清了代码与数据的界限，有效防御SQL注入，Anti-CSRF token机制的加入了进一步提高了安全性。</p>
+<h1 id="第九题-XSS-Reflected"><a href="#第九题-XSS-Reflected" class="headerlink" title="第九题-XSS-(Reflected)"></a>第九题-XSS-(Reflected)</h1><h2 id="Low-2"><a href="#Low-2" class="headerlink" title="Low"></a>Low</h2><h2 id="源代码-18"><a href="#源代码-18" class="headerlink" title="源代码"></a>源代码</h2><?php 
 
 // Is there any input? 
 
@@ -1616,7 +1629,7 @@ if( array_key_exists( "name", $_GET ) && $_GET[ 'name' ] != NULL ) {
 ?>
 <hr>
 <p>可以看到，代码直接引用了name参数，并没有任何的过滤与检查，存在明显的XSS漏洞。<br><img src="https://image.3001.net/images/20161223/14824823248355.png!small"></p>
-<h2 id="Medium-5"><a href="#Medium-5" class="headerlink" title="Medium"></a>Medium</h2><h2 id="源代码-23"><a href="#源代码-23" class="headerlink" title="源代码"></a>源代码</h2><?php 
+<h2 id="Medium-5"><a href="#Medium-5" class="headerlink" title="Medium"></a>Medium</h2><h2 id="源代码-19"><a href="#源代码-19" class="headerlink" title="源代码"></a>源代码</h2><?php 
 // Is there any input? 
 if( array_key_exists( "name", $_GET ) && $_GET[ 'name' ] != NULL ) { 
     // Get input 
@@ -1628,7 +1641,7 @@ if( array_key_exists( "name", $_GET ) && $_GET[ 'name' ] != NULL ) {
 <hr>
 <p>这里对输入进行了过滤，基于黑名单的思想，使用str_replace函数将输入中的<script><br>删除，这种防护机制是可以被轻松绕过的。</p>
 <p>输入&lt;sc<script>ript>alert(/xss/)</script>，成功弹框：<br><img src="https://image.3001.net/images/20161223/14824824105236.png!small"></p>
-<h2 id="High-4"><a href="#High-4" class="headerlink" title="High"></a>High</h2><h2 id="源代码-24"><a href="#源代码-24" class="headerlink" title="源代码"></a>源代码</h2><?php 
+<h2 id="High-4"><a href="#High-4" class="headerlink" title="High"></a>High</h2><h2 id="源代码-20"><a href="#源代码-20" class="headerlink" title="源代码"></a>源代码</h2><?php 
 // Is there any input? 
 if( array_key_exists( "name", $_GET ) && $_GET[ 'name' ] != NULL ) { 
     // Get input 
@@ -1644,7 +1657,7 @@ if( array_key_exists( "name", $_GET ) && $_GET[ 'name' ] != NULL ) {
 成功弹框：
 
 <p><img src="https://image.3001.net/images/20161223/14824825209982.png!small"></p>
-<h2 id="Impossible-1"><a href="#Impossible-1" class="headerlink" title="Impossible"></a>Impossible</h2><h2 id="源代码-25"><a href="#源代码-25" class="headerlink" title="源代码"></a>源代码</h2><?php 
+<h2 id="Impossible-1"><a href="#Impossible-1" class="headerlink" title="Impossible"></a>Impossible</h2><h2 id="源代码-21"><a href="#源代码-21" class="headerlink" title="源代码"></a>源代码</h2><?php 
 // Is there any input? 
 if( array_key_exists( "name", $_GET ) && $_GET[ 'name' ] != NULL ) { 
     // Check Anti-CSRF token 
@@ -1659,7 +1672,7 @@ generateSessionToken();
 ?>
 <hr>
 <p>Impossible级别的代码使用htmlspecialchars函数把预定义的字符&amp;、”、 ’、&lt;、&gt;转换为 HTML 实体，防止浏览器将其作为HTML元素。</p>
-<h1 id="第十题-XSS-Stored"><a href="#第十题-XSS-Stored" class="headerlink" title="第十题-XSS-(Stored)"></a>第十题-XSS-(Stored)</h1><h2 id="Low-3"><a href="#Low-3" class="headerlink" title="Low"></a>Low</h2><h2 id="源代码-26"><a href="#源代码-26" class="headerlink" title="源代码"></a>源代码</h2><?php 
+<h1 id="第十题-XSS-Stored"><a href="#第十题-XSS-Stored" class="headerlink" title="第十题-XSS-(Stored)"></a>第十题-XSS-(Stored)</h1><h2 id="Low-3"><a href="#Low-3" class="headerlink" title="Low"></a>Low</h2><h2 id="源代码-22"><a href="#源代码-22" class="headerlink" title="源代码"></a>源代码</h2><?php 
 if( isset( $_POST[ 'btnSign' ] ) ) { 
     // Get input 
     $message = trim( $_POST[ 'mtxMessage' ] ); 
@@ -1686,7 +1699,7 @@ if( isset( $_POST[ 'btnSign' ] ) ) {
 <p><img src="https://image.3001.net/images/20161223/14824826941488.png!small"><br>name一栏前端有字数限制，抓包改为<script>alert(/name/)</script>：</p>
 <p><img src="https://image.3001.net/images/20161223/14824827265355.png!small"><br>成功弹框：</p>
 <p><img src="https://image.3001.net/images/20161223/14824827533689.png!small"></p>
-<h2 id="Medium-6"><a href="#Medium-6" class="headerlink" title="Medium"></a>Medium</h2><h2 id="源代码-27"><a href="#源代码-27" class="headerlink" title="源代码"></a>源代码</h2><?php 
+<h2 id="Medium-6"><a href="#Medium-6" class="headerlink" title="Medium"></a>Medium</h2><h2 id="源代码-23"><a href="#源代码-23" class="headerlink" title="源代码"></a>源代码</h2><?php 
 if( isset( $_POST[ 'btnSign' ] ) ) { 
     // Get input 
     $message = trim( $_POST[ 'mtxMessage' ] ); 
@@ -1712,7 +1725,7 @@ if( isset( $_POST[ 'btnSign' ] ) ) {
 <p>抓包改name参数为&lt;sc<script>ript>alert(/xss/)</script>:</p>
 <p><img src="https://image.3001.net/images/20161223/14824828493990.png!small"><br>成功弹框：</p>
 <p><img src="https://image.3001.net/images/20161223/14824828893635.png!small"></p>
-<h2 id="High-5"><a href="#High-5" class="headerlink" title="High"></a>High</h2><h2 id="源代码-28"><a href="#源代码-28" class="headerlink" title="源代码"></a>源代码</h2><?php 
+<h2 id="High-5"><a href="#High-5" class="headerlink" title="High"></a>High</h2><h2 id="源代码-24"><a href="#源代码-24" class="headerlink" title="源代码"></a>源代码</h2><?php 
 if( isset( $_POST[ 'btnSign' ] ) ) { 
     // Get input 
     $message = trim( $_POST[ 'mtxMessage' ] ); 
@@ -1735,7 +1748,7 @@ if( isset( $_POST[ 'btnSign' ] ) ) {
 <p>抓包改name参数为<img src=1 onerror=alert(1)>：</p>
 <p><img src="https://image.3001.net/images/20161223/14824830099169.png!small"><br>成功弹框：</p>
 <p><img src="https://image.3001.net/images/20161223/1482483036879.png!small"></p>
-<h2 id="Impossible-2"><a href="#Impossible-2" class="headerlink" title="Impossible"></a>Impossible</h2><h2 id="源代码-29"><a href="#源代码-29" class="headerlink" title="源代码"></a>源代码</h2><?php 
+<h2 id="Impossible-2"><a href="#Impossible-2" class="headerlink" title="Impossible"></a>Impossible</h2><h2 id="源代码-25"><a href="#源代码-25" class="headerlink" title="源代码"></a>源代码</h2><?php 
 if( isset( $_POST[ 'btnSign' ] ) ) { 
     // Check Anti-CSRF token 
     checkToken( $_REQUEST[ 'user_token' ], $_SESSION[ 'session_token' ], 'index.php' ); 
